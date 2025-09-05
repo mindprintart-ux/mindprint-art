@@ -14,12 +14,15 @@
   p{opacity:.85;margin:0 0 10px 0}
   .home{display:inline-block;margin-top:10px;padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.2);text-decoration:none;color:#fff}
   /* subtle moiré bg */
-  .bg, .bg::after{position:fixed;inset:-10%;}
-  .bg{background:
-      repeating-linear-gradient(0deg, rgba(255,255,255,.08) 0 2px, transparent 0 8px);}
-  .bg::after{content:"";opacity:.6;mix-blend-mode:multiply;
-      background:repeating-linear-gradient(2deg, rgba(255,255,255,.08) 0 2px, transparent 0 8px);
-      animation:drift 18s ease-in-out infinite alternate}
+  /* replace the .bg block in 404.html with this */
+.bg, .bg::after{
+  position:fixed;
+  inset:-10%;
+  pointer-events:none;   /* ← let clicks pass through */
+  z-index:0;
+}
+.wrap{ position:relative; z-index:1; }  /* ← ensure content is on top */
+
   @keyframes drift { to { transform: rotate(-2deg) scale(1.02); } }
   @media (prefers-reduced-motion: reduce){ .bg::after{ animation:none; } }
 </style>
