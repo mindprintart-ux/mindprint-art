@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>mindprint.art — Generative glitch, emotional mosaics, analog horror</title>
+  <meta name="description" content="mindprint.art blends generative art, glitch aesthetics, and psychology into interactive web experiences and collectible NFTs." />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="canonical" href="https://mindprint.art/">
+  <meta property="og:title" content="mindprint.art" />
+  <meta property="og:description" content="Generative glitch, emotional mosaics, analog horror." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://mindprint.art/" />
+  <meta property="og:image" content="https://mindprint.art/og-image.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <style>
+    :root{
+      --bg:#0b0b0c; --bg-soft:#121215; --ink:#e7e7ec; --muted:#a6a6b0;
+      --accent:#7df9ff; /* cyber-cyan */
+      --accent-2:#ff4d9a; /* magenta glitch */
+      --brand:#00ff87; /* CRT green for small details */
+      --radius:14px; --shadow:0 10px 30px rgba(0,0,0,.45);
+      --grid: minmax(260px, 1fr);
+    }
+    @media (prefers-color-scheme: light){
+      :root{ --bg:#f7f7fb; --bg-soft:#ffffff; --ink:#16161a; --muted:#525260; }
+      body{ background:var(--bg); color:var(--ink); }
+    }
+    *{ box-sizing:border-box }
+    html,body{ height:100% }
+    body{
+      margin:0; font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg); color: var(--ink);
+    }
+
+    /* Layout */
+    .container{ width:min(1200px, 92vw); margin:0 auto; }
+    header{
+      position:sticky; top:0; z-index:50; backdrop-filter: blur(8px);
+      background: color-mix(in oklab, var(--bg) 85%, transparent);
+      border-bottom: 1px solid color-mix(in oklab, var(--ink) 12%, transparent);
+    }
+    .nav{
+      display:flex; align-items:center; justify-content:space-between; padding:14px 0;
+    }
+    .logo{ display:flex; align-items:center; gap:10px; text-decoration:none; color:inherit; }
+    .logo .mark{
+      width:26px; height:26px; border-radius:6px; background: linear-gradient(135deg,var(--accent),var(--accent-2));
+      box-shadow:0 0 18px color-mix(in oklab, var(--accent) 40%, transparent);
+    }
+    .nav a{ color:inherit; text-decoration:none; }
+    .nav-links{ display:flex; gap:22px; align-items:center; }
+    .cta{
+      padding:10px 16px; border-radius:10px; font-weight:600;
+      background:linear-gradient(135deg,var(--accent), var(--accent-2));
+      color:#081014; box-shadow: var(--shadow);
+    }
+    .menu-btn{ display:none; background:none; border:0; color:inherit; font-size:22px }
+    @media (max-width: 860px){
+      .nav-links{ display:none; }
+      .menu-btn{ display:block; }
+    }
+    .mobile-menu{
+      display:none; padding:10px 0 20px; border-bottom:1px solid color-mix(in oklab, var(--ink) 12%, transparent);
+    }
+    .mobile-menu a{ display:block; padding:10px 0; }
+
+    /* Hero */
+    .hero{ position:relative; padding:64px 0 24px; overflow:hidden; }
+    .hero-inner{ display:grid; gap:24px; grid-template-columns: 1.2fr .8fr; align-items:center; }
+    @media (max-width: 980px){ .hero-inner{ grid-template-columns: 1fr; } }
+    h1{ font-size: clamp(32px, 4.5vw, 56px); line-height:1.05; margin:0; letter-spacing:-.5px }
+    .sub{ font-size: clamp(16px, 2.1vw, 20px); color: var(--muted); margin-top:10px }
+    .hero-ctas{ display:flex; gap:14px; margin-top:22px; flex-wrap:wrap; }
+    .btn{ padding:10px 16px; border-radius:12px; border:1px solid color-mix(in oklab, var(--ink) 18%, transparent); background: var(--bg-soft); color:inherit; }
+    .btn.primary{ border-color:transparent; background:linear-gradient(135deg,var(--accent),var(--accent-2)); color:#081014; font-weight:700 }
+
+    /* Card grid */
+    .section{ padding: 36px 0; }
+    .section h2{ font-size: clamp(22px, 3vw, 32px); margin:0 0 18px }
+    .grid{ display:grid; gap:18px; grid-template-columns: repeat(12, 1fr); }
+    .cards{ display:grid; gap:18px; grid-template-columns: repeat(auto-fit, var(--grid)); }
+    .card{
+      background: var(--bg-soft); border:1px solid color-mix(in oklab, var(--ink) 12%, transparent);
+      border-radius: var(--radius); overflow:hidden; box-shadow: var(--shadow);
+      display:flex; flex-direction:column;
+    }
+    .card img{ width:100%; height:200px; object-fit:cover; background:#000; display:block; }
+    .card .body{ padding:14px; display:flex; flex-direction:column; gap:6px }
+    .tags{ display:flex; gap:8px; flex-wrap:wrap; }
+    .tag{ font-size:12px; padding:4px 8px; border-radius:999px; background: color-mix(in oklab, var(--ink) 8%, transparent); color: var(--muted); }
+
+    /* About */
+    .about{ background: linear-gradient(180deg, color-mix(in oklab, var(--accent) 7%, transparent), transparent 18%); border-top:1px solid color-mix(in oklab, var(--ink) 10%, transparent); }
+
+    /* Footer */
+    footer{ padding:24px 0 60px; color: var(--muted); border-top:1px solid color-mix(in oklab, var(--ink) 12%, transparent); }
+
+    /* Tasteful glitch overlay */
+    .glitch{
+      position:absolute; inset:-2px; pointer-events:none; mix-blend-mode:screen; opacity:.12;
+      background:
+        repeating-linear-gradient(0deg, rgba(255,255,255,.3) 0 1px, transparent 1px 2px),
+        radial-gradient(1200px 600px at 10% 10%, rgba(125,249,255,.15), transparent 40%),
+        radial-gradient(700px 400px at 90% 30%, rgba(255,77,154,.12), transparent 50%);
+      animation: scan 9s linear infinite;
+    }
+    @keyframes scan{
+      0%{ transform: translateY(-10%) }
+      100%{ transform: translateY(10%) }
+    }
+    @media (prefers-reduced-motion: reduce){
+      .glitch{ animation: none }
+    }
+
+    /* Small CRT accent line under header */
+    .crt-line{
+      height:2px; background: linear-gradient(90deg, var(--brand), transparent 40%, var(--accent-2));
+      box-shadow: 0 0 10px color-mix(in oklab, var(--brand) 60%, transparent);
+    }
+    a:focus-visible, button:focus-visible{ outline: 2px solid var(--accent); outline-offset: 2px; border-radius:6px }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="crt-line"></div>
+    <div class="container nav">
+      <a class="logo" href="/">
+        <span class="mark" aria-hidden="true"></span>
+        <strong>mindprint.art</strong>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#projects">Projects</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+        <a class="cta" href="#projects">View Work</a>
+      </nav>
+      <button class="menu-btn" aria-expanded="false" aria-controls="mobile-menu" aria-label="Toggle menu">☰</button>
+    </div>
+    <div id="mobile-menu" class="mobile-menu container" hidden>
+      <a href="#projects">Projects</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+      <a class="cta" href="#projects">View Work</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="glitch" aria-hidden="true"></div>
+      <div class="container hero-inner">
+        <div>
+          <h1>Generative art with a pulse.<br>Glitch, psychology, and analog horror—crafted for the web.</h1>
+          <p class="sub">Interactive mosaics, vibe-coded visuals, and collectible drops. Built for speed, a11y, and long shelf-life.</p>
+          <div class="hero-ctas">
+            <a class="btn primary" href="#projects">Explore projects</a>
+            <a class="btn" href="#contact">Get in touch</a>
+          </div>
+        </div>
+        <div>
+          <div class="card">
+            <img src="/assets/preview-hero.webp" alt="Mindrift Transmission preview" loading="lazy" decoding="async">
+            <div class="body">
+              <strong>Mindrift Transmission</strong>
+              <div class="tags"><span class="tag">WebGL</span><span class="tag">Glitch</span><span class="tag">Interactive</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" class="section container">
+      <h2>Featured Projects</h2>
+      <div class="cards">
+        <!-- Project Card -->
+        <article class="card">
+          <img src="/assets/projects/emotional-flicker.webp" alt="Emotional Flicker mosaic" loading="lazy" decoding="async">
+          <div class="body">
+            <strong>Emotional Flicker</strong>
+            <p class="muted">Generative mosaics encoded by color-emotion seeds.</p>
+            <div class="tags"><span class="tag">Generative</span><span class="tag">NFT</span></div>
+            <a class="btn" href="/projects/emotional-flicker/">View</a>
+          </div>
+        </article>
+        <article class="card">
+          <img src="/assets/projects/analog-tv.webp" alt="Analog horror CRT experience" loading="lazy" decoding="async">
+          <div class="body">
+            <strong>Analog Horror CRT</strong>
+            <p class="muted">Cinematic CRT, scanlines, channel static, interactive remote.</p>
+            <div class="tags"><span class="tag">Web</span><span class="tag">Interaction</span></div>
+            <a class="btn" href="/projects/analog-crt/">View</a>
+          </div>
+        </article>
+        <article class="card">
+          <img src="/assets/projects/mindprint-summer.webp" alt="Mindprint summer vibes" loading="lazy" decoding="async">
+          <div class="body">
+            <strong>Summer Vibes Edition</strong>
+            <p class="muted">Limited palette, looping glitch, exportable assets.</p>
+            <div class="tags"><span class="tag">Edition</span><span class="tag">Design</span></div>
+            <a class="btn" href="/projects/summer-vibes/">View</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="about" class="section about">
+      <div class="container grid" style="grid-template-columns: repeat(12, 1fr); gap:24px;">
+        <div style="grid-column: span 7;">
+          <h2>About</h2>
+          <p>mindprint.art is a studio exploring how visuals encode feeling. We build web-native, high-performance pieces—from glitchy TV portals to seed-driven mosaics—often pairing code with research-grade rigor.</p>
+          <p>Tools: HTML/CSS/JS, Canvas/WebGL, Python for generative pipelines, After Effects for cinematic polish.</p>
+        </div>
+        <div style="grid-column: span 5;">
+          <div class="card">
+            <img src="/assets/andri-portrait.webp" alt="Studio portrait" loading="lazy">
+            <div class="body">
+              <strong>Capabilities</strong>
+              <div class="tags">
+                <span class="tag">Interactive</span><span class="tag">A11y</span><span class="tag">Motion</span>
+                <span class="tag">Brand</span><span class="tag">Perf</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="section container">
+      <h2>Contact</h2>
+      <p class="muted">For collaborations, exhibitions, or commissions.</p>
+      <div class="hero-ctas">
+        <a class="btn primary" href="mailto:hello@mindprint.art">hello@mindprint.art</a>
+        <a class="btn" href="https://github.com/mindprintart-ux" rel="noopener">GitHub</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <small>© <span id="year"></span> mindprint.art — All rights reserved.</small>
+    </div>
+  </footer>
+
+  <script>
+    // year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // mobile menu
+    const btn = document.querySelector('.menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    btn?.addEventListener('click', () => {
+      const open = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!open));
+      if(open){ menu.setAttribute('hidden', ''); menu.style.display='none'; }
+      else{ menu.removeAttribute('hidden'); menu.style.display='block'; }
+    });
+
+    // Respect reduced motion: soften glitch scan speed
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(prefersReduced){
+      const g = document.querySelector('.glitch');
+      if(g) g.style.opacity = '.06';
+    }
+  </script>
+</body>
+</html>
