@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.7">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="UTF-8" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;Mindprint Filler Engine&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>body { background: #000; color: #fff; font-family: sans-serif; text-align: center; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>canvas { background: #111; margin-top: 1em; border-radius: 12px; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>button { margin-top: 1em; padding: 8px 16px; font-size: 16px; }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;h1&gt;mindprint.art – Opepen Grid-Aligned Generator&lt;/h1&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;canvas id="mindprint" width="768" height="768"&gt;&lt;/canvas&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;br&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;button onclick="generateArt()"&gt;🔁 Regenerate&lt;/button&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const canvas = document.getElementById("mindprint");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const ctx = canvas.getContext("2d");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const unit = 96; // grid unit size (8x8)</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function clearCanvas() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.clearRect(0, 0, canvas.width, canvas.height);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function drawBaseOpepen() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.fillStyle = "white";</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// LEFT EYE: 3/4 arc shape + top-left square</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.beginPath();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.moveTo(unit * 2, unit * 1);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.arc(unit * 2, unit * 2, unit, -Math.PI / 2, Math.PI / 2);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.lineTo(unit * 1, unit * 2);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.lineTo(unit * 1, unit * 1);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.closePath();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.fill();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.fillRect(unit * 1, unit * 1, unit, unit); // top-left square</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// RIGHT EYE: circle in cell (5,1)</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.beginPath();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.arc(unit * 5 + unit / 2, unit * 1 + unit / 2, unit / 2, 0, Math.PI * 2);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.fill();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// MOUTH: bottom-rounded rectangle</p>
+<p class="p1"><span class="Apple-converted-space">      </span>drawRoundedRect(unit * 2, unit * 4, unit * 4, unit, 0, 0, 24, 24);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.fill();</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// BOTTOM EXTENSION: top-rounded rectangle</p>
+<p class="p1"><span class="Apple-converted-space">      </span>drawRoundedRect(unit * 3, unit * 6, unit * 2, unit / 2, 24, 24, 0, 0);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.fill();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function drawRoundedRect(x, y, w, h, rtl, rtr, rbr, rbl) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.beginPath();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.moveTo(x + rtl, y);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.lineTo(x + w - rtr, y);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.quadraticCurveTo(x + w, y, x + w, y + rtr);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.lineTo(x + w, y + h - rbr);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.quadraticCurveTo(x + w, y + h, x + w - rbr, y + h);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.lineTo(x + rbl, y + h);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.quadraticCurveTo(x, y + h, x, y + h - rbl);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.lineTo(x, y + rtl);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.quadraticCurveTo(x, y, x + rtl, y);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>ctx.closePath();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function generateArt() {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>clearCanvas();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>drawBaseOpepen();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>generateArt();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
