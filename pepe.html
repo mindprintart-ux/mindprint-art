@@ -28,28 +28,42 @@
     function drawBaseOpepen() {
       ctx.fillStyle = "white";
 
-      // LEFT EYE: 3/4 arc shape + top-left square
+      // LEFT EYE — 3 arcs + 1 square
+      // Top-left square
+      ctx.fillRect(unit * 1, unit * 1, unit, unit);
+
+      // Top-right quarter arc
       ctx.beginPath();
       ctx.moveTo(unit * 2, unit * 1);
-      ctx.arc(unit * 2, unit * 2, unit, -Math.PI / 2, Math.PI / 2);
-      ctx.lineTo(unit * 1, unit * 2);
-      ctx.lineTo(unit * 1, unit * 1);
+      ctx.arc(unit * 2, unit * 1, unit, Math.PI, Math.PI * 1.5);
       ctx.closePath();
       ctx.fill();
 
-      ctx.fillRect(unit * 1, unit * 1, unit, unit); // top-left square
-
-      // RIGHT EYE: circle in cell (5,1)
+      // Bottom-right quarter arc
       ctx.beginPath();
-      ctx.arc(unit * 5 + unit / 2, unit * 1 + unit / 2, unit / 2, 0, Math.PI * 2);
+      ctx.moveTo(unit * 2, unit * 2);
+      ctx.arc(unit * 2, unit * 2, unit, Math.PI * 1.5, 0);
+      ctx.closePath();
       ctx.fill();
 
-      // MOUTH: bottom-rounded rectangle
+      // Bottom-left quarter arc
+      ctx.beginPath();
+      ctx.moveTo(unit * 1, unit * 2);
+      ctx.arc(unit * 1, unit * 2, unit, 0, Math.PI * 0.5);
+      ctx.closePath();
+      ctx.fill();
+
+      // RIGHT EYE — Full circle, 2x2 area (centered at 6,2)
+      ctx.beginPath();
+      ctx.arc(unit * 6, unit * 2, unit, 0, Math.PI * 2);
+      ctx.fill();
+
+      // MOUTH — Rounded bottom rectangle, spans 2x4 (from col 2 to 6, row 4)
       drawRoundedRect(unit * 2, unit * 4, unit * 4, unit, 0, 0, 24, 24);
       ctx.fill();
 
-      // BOTTOM EXTENSION: top-rounded rectangle
-      drawRoundedRect(unit * 3, unit * 6, unit * 2, unit / 2, 24, 24, 0, 0);
+      // LOWER BAR — top-rounded rectangle (1x4) after 1x4 gap below mouth
+      drawRoundedRect(unit * 3, unit * 6, unit * 2, unit, 24, 24, 0, 0);
       ctx.fill();
     }
 
