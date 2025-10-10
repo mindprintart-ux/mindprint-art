@@ -19,7 +19,7 @@
   <script>
     const canvas = document.getElementById("mindprint");
     const ctx = canvas.getContext("2d");
-    const unit = 96; // grid unit size (8x8)
+    const unit = 96; // 8x8 grid
 
     function clearCanvas() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -28,42 +28,45 @@
     function drawBaseOpepen() {
       ctx.fillStyle = "white";
 
-      // LEFT EYE — 3 arcs + 1 square
+      // LEFT EYE — located at (1,1), fills 1x1
       // Top-left square
-      ctx.fillRect(unit * 1, unit * 1, unit, unit);
+      ctx.fillRect(unit * 1, unit * 1, unit / 2, unit / 2);
 
-      // Top-right quarter arc
+      // Top-right arc
       ctx.beginPath();
-      ctx.moveTo(unit * 2, unit * 1);
-      ctx.arc(unit * 2, unit * 1, unit, Math.PI, Math.PI * 1.5);
+      ctx.moveTo(unit * 1.5, unit * 1);
+      ctx.arc(unit * 1.5, unit * 1.5, unit / 2, -Math.PI / 2, 0);
+      ctx.lineTo(unit * 1.5, unit * 1.5);
       ctx.closePath();
       ctx.fill();
 
-      // Bottom-right quarter arc
+      // Bottom-right arc
       ctx.beginPath();
-      ctx.moveTo(unit * 2, unit * 2);
-      ctx.arc(unit * 2, unit * 2, unit, Math.PI * 1.5, 0);
+      ctx.moveTo(unit * 1.5, unit * 1.5);
+      ctx.arc(unit * 1.5, unit * 1.5, unit / 2, 0, Math.PI / 2);
+      ctx.lineTo(unit * 1.5, unit * 1.5);
       ctx.closePath();
       ctx.fill();
 
-      // Bottom-left quarter arc
+      // Bottom-left arc
       ctx.beginPath();
-      ctx.moveTo(unit * 1, unit * 2);
-      ctx.arc(unit * 1, unit * 2, unit, 0, Math.PI * 0.5);
+      ctx.moveTo(unit * 1, unit * 1.5);
+      ctx.arc(unit * 1.5, unit * 1.5, unit / 2, Math.PI / 2, Math.PI);
+      ctx.lineTo(unit * 1.5, unit * 1.5);
       ctx.closePath();
       ctx.fill();
 
-      // RIGHT EYE — Full circle, 2x2 area (centered at 6,2)
+      // RIGHT EYE — full circle centered in a 2x2 area at (5,1)
       ctx.beginPath();
       ctx.arc(unit * 6, unit * 2, unit, 0, Math.PI * 2);
       ctx.fill();
 
-      // MOUTH — Rounded bottom rectangle, spans 2x4 (from col 2 to 6, row 4)
+      // MOUTH — 2x4 rectangle at (2,4) with bottom-rounded corners
       drawRoundedRect(unit * 2, unit * 4, unit * 4, unit, 0, 0, 24, 24);
       ctx.fill();
 
-      // LOWER BAR — top-rounded rectangle (1x4) after 1x4 gap below mouth
-      drawRoundedRect(unit * 3, unit * 6, unit * 2, unit, 24, 24, 0, 0);
+      // LOWER BAR — 1x4 rectangle at (2,6), with top-rounded corners
+      drawRoundedRect(unit * 2, unit * 6, unit * 4, unit, 24, 24, 0, 0);
       ctx.fill();
     }
 
