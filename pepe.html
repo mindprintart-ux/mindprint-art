@@ -28,47 +28,41 @@
     function drawBaseOpepen() {
       ctx.fillStyle = "white";
 
-      // LEFT EYE — exact 2x2 block at (2,1)
-      const x = unit * 2;
-      const y = unit * 1;
+      // LEFT EYE — 3 arcs + 1 square inside a 2x2 area at (2,1)
+      // Square at top-left quadrant
+      ctx.fillRect(unit * 2, unit * 1, unit, unit);
 
-      // Top-left square
-      ctx.fillRect(x, y, unit, unit);
-
-      // Top-right quarter circle
+      // Top-right arc
       ctx.beginPath();
-      ctx.moveTo(x + unit, y);
-      ctx.arc(x + unit * 2, y, unit, Math.PI, Math.PI * 1.5);
-      ctx.lineTo(x + unit * 2, y);
+      ctx.moveTo(unit * 3, unit * 2);
+      ctx.arc(unit * 3, unit * 2, unit, -Math.PI / 2, 0);
       ctx.closePath();
       ctx.fill();
 
-      // Bottom-right quarter circle
+      // Bottom-right arc
       ctx.beginPath();
-      ctx.moveTo(x + unit * 2, y + unit);
-      ctx.arc(x + unit * 2, y + unit * 2, unit, -Math.PI / 2, 0);
-      ctx.lineTo(x + unit * 2, y + unit * 2);
+      ctx.moveTo(unit * 3, unit * 2);
+      ctx.arc(unit * 3, unit * 2, unit, 0, Math.PI / 2);
       ctx.closePath();
       ctx.fill();
 
-      // Bottom-left quarter circle
+      // Bottom-left arc
       ctx.beginPath();
-      ctx.moveTo(x + unit, y + unit * 2);
-      ctx.arc(x, y + unit * 2, unit, 0, Math.PI / 2);
-      ctx.lineTo(x, y + unit * 2);
+      ctx.moveTo(unit * 3, unit * 2);
+      ctx.arc(unit * 3, unit * 2, unit, Math.PI / 2, Math.PI);
       ctx.closePath();
       ctx.fill();
 
-      // RIGHT EYE — full circle centered at (5,2), radius = unit
+      // RIGHT EYE — full circle spanning 2x2 grid at (4,1)
       ctx.beginPath();
       ctx.arc(unit * 5, unit * 2, unit, 0, Math.PI * 2);
       ctx.fill();
 
-      // MOUTH — full 2x4 grid at (2,3), height = 2 units
+      // MOUTH — full 2x4 grid at (2,3), increased height to match schematic (2 units tall)
       drawRoundedRect(unit * 2, unit * 3, unit * 4, unit * 2, 0, 0, 24, 24);
       ctx.fill();
 
-      // LOWER BAR — 1x4 rectangle at (2,6), top-rounded corners
+      // LOWER BAR — 1x4 rectangle after 1x4 gap, placed at (2,6), top-rounded
       drawRoundedRect(unit * 2, unit * 6, unit * 4, unit, 24, 24, 0, 0);
       ctx.fill();
     }
