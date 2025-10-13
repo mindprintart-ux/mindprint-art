@@ -16,13 +16,15 @@
   <br>
   <button id="regenerate">🔁 Regenerate</button>
   <button onclick="downloadPNG()">📥 Export PNG</button>
-  <button onclick="downloadHighResPNG()">📸 Export High-Res PNG (2500x2500)</button>
+  <button onclick="downloadGIF()">🎞 Export Animated GIF</button>
 
   <script>
     const canvas = document.getElementById("mindprint");
     const ctx = canvas.getContext("2d");
     const unit = 96;
     let frame = 0;
+
+    const gifFrames = [];
 
     const traitFunctions = [
       drawNoiseFill,
@@ -140,7 +142,9 @@
 
     function drawBaseOpepen() {
       activeTraits = [];
-      const shapes = [
+
+      // LEFT EYE – precisely 3 arcs and 1 square in a 2x2 shape at (2,1)
+      const leftEyeClips = [
         () => {
           ctx.beginPath();
           ctx.rect(unit * 2, unit * 1, unit, unit);
@@ -148,8 +152,8 @@
         },
         () => {
           ctx.beginPath();
-          ctx.moveTo(unit * 3, unit * 2);
-          ctx.arc(unit * 3, unit * 2, unit, -Math.PI / 2, 0);
+          ctx.moveTo(unit * 3, unit * 1);
+          ctx.arc(unit * 3, unit * 1, unit, -Math.PI / 2, 0);
           ctx.closePath();
         },
         () => {
@@ -160,15 +164,16 @@
         },
         () => {
           ctx.beginPath();
-          ctx.moveTo(unit * 3, unit * 2);
-          ctx.arc(unit * 3, unit * 2, unit, Math.PI / 2, Math.PI);
+          ctx.moveTo(unit * 2, unit * 2);
+          ctx.arc(unit * 2, unit * 2, unit, Math.PI / 2, Math.PI);
           ctx.closePath();
-        },
+        }
       ];
-      shapes.forEach(clipFn => {
-        applyTraitToClip(unit * 2, unit * 1, unit * 2, unit * 2, clipFn, [getRandomTraitFn()]);
+      leftEyeClips.forEach(clipFn => {
+        applyTraitToClip(unit * 2, unit * 1, unit, unit, clipFn, [getRandomTraitFn()]);
       });
 
+      // RIGHT EYE – split into 4 clean quadrants
       const quadrants = [
         { angleStart: 0, angleEnd: Math.PI / 2 },
         { angleStart: Math.PI / 2, angleEnd: Math.PI },
@@ -185,6 +190,7 @@
         applyTraitToClip(unit * 4, unit * 1, unit * 2, unit * 2, clipFn, [getRandomTraitFn()]);
       });
 
+      // MOUTH (2x4 with rounded bottom corners)
       applyTraitToClip(unit * 2, unit * 3, unit * 4, unit * 2, () => {
         ctx.beginPath();
         ctx.moveTo(unit * 2, unit * 3);
@@ -197,6 +203,7 @@
         ctx.closePath();
       });
 
+      // LOWER BAR (1x4 with rounded top corners)
       applyTraitToClip(unit * 2, unit * 6, unit * 4, unit, () => {
         ctx.beginPath();
         ctx.moveTo(unit * 2, unit * 7);
@@ -214,9 +221,18 @@
       drawBaseOpepen();
     }
 
-    document.getElementById("regenerate").addEventListener("click", () => {
-      generateArt();
-    });
+    function downloadPNG() {
+      const link = document.createElement("a");
+      link.download = "mindprint.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+    }
+
+    function downloadGIF() {
+      alert("GIF export coming soon — stay tuned!");
+    }
+
+    document.getElementById("regenerate").addEventListener("click", generateArt);
 
     function loop() {
       renderTraits();
