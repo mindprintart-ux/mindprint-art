@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mindprint Filler Engine</title>
+  <style>
+    body { background: #000; color: #fff; font-family: sans-serif; text-align: center; }
+    canvas { background: #111; margin-top: 1em; border-radius: 12px; }
+    button { margin: 0.5em; padding: 8px 16px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h1>mindprint.art – Opepen Grid-Aligned Generator</h1>
+  <canvas id="mindprint" width="768" height="768"></canvas>
+  <br>
+  <button onclick="generateArt()">🔁 Regenerate</button>
+  <button onclick="downloadPNG()">📥 Export PNG</button>
+  <button onclick="downloadSVG()">📥 Export SVG (outline only)</button>
+
+  <script>
+    const canvas = document.getElementById("mindprint");
+    const ctx = canvas.getContext("2d");
+    const unit = 96;
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function drawSolidColor(x, y, w, h, color = "#FFD700") {
+      ctx.fillStyle = color;
+      ctx.fillRect(x, y, w, h);
+    }
+
+    function drawDiagonalStripes(x, y, w, h, color = "white") {
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(x, y, w, h);
+      ctx.clip();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      for (let i = -w; i < w + h; i += 10) {
+        ctx.beginPath();
+        ctx.moveTo(x + i, y);
+        ctx.lineTo(x + i + h, y + h);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function drawNoiseFill(x, y, w, h) {
+      const imageData = ctx.createImageData(w, h);
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        const val = Math.random() * 255;
+        imageData.data[i] = val;
+        imageData.data[i + 1] = val;
+        imageData.data[i + 2] = val;
+        imageData.data[i + 3] = 100;
+      }
+      ctx.putImageData(imageData, x, y);
+    }
+
+    function drawDotGrid(x, y, w, h, spacing = 12) {
+      ctx.fillStyle = "white";
+      for (let i = x + spacing / 2; i < x + w; i += spacing) {
+        for (let j = y + spacing / 2; j < y + h; j += spacing) {
+          ctx.beginPath();
+          ctx.arc(i, j, 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+
+    function drawRadialBurst(x, y, w, h) {
+      const cx = x + w / 2;
+      const cy = y + h / 2;
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 1.2;
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(x, y, w, h);
+      ctx.clip();
+      for (let i = 0; i < 100; i++) {
+        const angle = (Math.PI * 2 * i) / 100;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + Math.cos(angle) * w, cy + Math.sin(angle) * h);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function drawConcentricCircles(x, y, w, h) {
+      const cx = x + w / 2;
+      const cy = y + h / 2;
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 1.5;
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(x, y, w, h);
+      ctx.clip();
+      for (let r = 10; r < Math.min(w, h) / 1.2; r += 10) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function drawWaves(x, y, w, h) {
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 1.2;
+      ctx.save();
+      ctx.beginPath();
+      ctx.rect(x, y, w, h);
+      ctx.clip();
+      for (let j = y; j < y + h; j += 8) {
+        ctx.beginPath();
+        for (let i = x; i < x + w; i++) {
+          const wave = Math.sin(i * 0.05 + j * 0.1) * 6;
+          ctx.lineTo(i, j + wave);
+        }
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    const traitFunctions = [
+      drawSolidColor,
+      drawDiagonalStripes,
+      drawNoiseFill,
+      drawDotGrid,
+      drawRadialBurst,
+      drawConcentricCircles,
+      drawWaves
+    ];
+
+    function drawRandomTrait(x, y, w, h) {
+      const trait = traitFunctions[Math.floor(Math.random() * traitFunctions.length)];
+      trait(x, y, w, h);
+    }
+
+    function drawBaseOpepen() {
+      drawRandomTrait(unit * 2, unit * 1, unit * 2, unit * 2); // Left Eye
+      drawRandomTrait(unit * 4, unit * 1, unit * 2, unit * 2); // Right Eye
+      drawRandomTrait(unit * 2, unit * 3, unit * 4, unit * 2); // Mouth
+      drawRandomTrait(unit * 2, unit * 6, unit * 4, unit);     // Lower Bar
+    }
+
+    function generateArt() {
+      clearCanvas();
+      drawBaseOpepen();
+    }
+
+    function downloadPNG() {
+      const link = document.createElement('a');
+      link.download = 'mindprint.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    function downloadSVG() {
+      const svgContent = `<?xml version="1.0" encoding="UTF-8"?>
+        <svg xmlns="http://www.w3.org/2000/svg" width="768" height="768" viewBox="0 0 768 768">
+          <rect x="192" y="96" width="192" height="192" fill="#FFD700" />
+          <rect x="384" y="96" width="192" height="192" fill="none" stroke="white" stroke-width="2" stroke-dasharray="10 5" />
+          <rect x="192" y="288" width="384" height="192" fill="gray" fill-opacity="0.2" />
+          <rect x="192" y="576" width="384" height="96" fill="none" stroke="white" stroke-width="1" />
+        </svg>`;
+      const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+      const link = document.createElement('a');
+      link.download = 'mindprint.svg';
+      link.href = URL.createObjectURL(blob);
+      link.click();
+    }
+
+    generateArt();
+  </script>
+</body>
+</html>
