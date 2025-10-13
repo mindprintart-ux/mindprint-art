@@ -15,16 +15,14 @@
   <canvas id="mindprint" width="768" height="768"></canvas>
   <br>
   <button id="regenerate">🔁 Regenerate</button>
-  <button onclick="downloadPNG()">📥 Export PNG</button>
   <button onclick="downloadGIF()">🎞 Export Animated GIF</button>
 
+  <script src="https://unpkg.com/gif.js.optimized/dist/gif.js"></script>
   <script>
     const canvas = document.getElementById("mindprint");
     const ctx = canvas.getContext("2d");
     const unit = 96;
     let frame = 0;
-
-    const gifFrames = [];
 
     const traitFunctions = [
       drawNoiseFill,
@@ -143,37 +141,38 @@
     function drawBaseOpepen() {
       activeTraits = [];
 
-      // LEFT EYE – precisely 3 arcs and 1 square in a 2x2 shape at (2,1)
-      const leftEyeClips = [
-        () => {
-          ctx.beginPath();
-          ctx.rect(unit * 2, unit * 1, unit, unit);
-          ctx.closePath();
-        },
-        () => {
-          ctx.beginPath();
-          ctx.moveTo(unit * 3, unit * 1);
-          ctx.arc(unit * 3, unit * 1, unit, -Math.PI / 2, 0);
-          ctx.closePath();
-        },
-        () => {
-          ctx.beginPath();
-          ctx.moveTo(unit * 3, unit * 2);
-          ctx.arc(unit * 3, unit * 2, unit, 0, Math.PI / 2);
-          ctx.closePath();
-        },
-        () => {
-          ctx.beginPath();
-          ctx.moveTo(unit * 2, unit * 2);
-          ctx.arc(unit * 2, unit * 2, unit, Math.PI / 2, Math.PI);
-          ctx.closePath();
-        }
-      ];
-      leftEyeClips.forEach(clipFn => {
-        applyTraitToClip(unit * 2, unit * 1, unit, unit, clipFn, [getRandomTraitFn()]);
+      const eyeX = unit * 2;
+      const eyeY = unit * 1;
+
+      // LEFT EYE corrected 3 arcs + 1 square inside the 2x2 block
+      applyTraitToClip(eyeX, eyeY, unit, unit, () => {
+        ctx.beginPath();
+        ctx.rect(eyeX, eyeY, unit, unit);
+        ctx.closePath();
       });
 
-      // RIGHT EYE – split into 4 clean quadrants
+      applyTraitToClip(eyeX + unit, eyeY, unit, unit, () => {
+        ctx.beginPath();
+        ctx.moveTo(eyeX + unit * 2, eyeY);
+        ctx.arc(eyeX + unit, eyeY, unit, -Math.PI / 2, 0);
+        ctx.closePath();
+      });
+
+      applyTraitToClip(eyeX + unit, eyeY + unit, unit, unit, () => {
+        ctx.beginPath();
+        ctx.moveTo(eyeX + unit * 2, eyeY + unit * 2);
+        ctx.arc(eyeX + unit, eyeY + unit, unit, 0, Math.PI / 2);
+        ctx.closePath();
+      });
+
+      applyTraitToClip(eyeX, eyeY + unit, unit, unit, () => {
+        ctx.beginPath();
+        ctx.moveTo(eyeX, eyeY + unit * 2);
+        ctx.arc(eyeX, eyeY + unit, unit, Math.PI / 2, Math.PI);
+        ctx.closePath();
+      });
+
+      // RIGHT EYE
       const quadrants = [
         { angleStart: 0, angleEnd: Math.PI / 2 },
         { angleStart: Math.PI / 2, angleEnd: Math.PI },
@@ -190,7 +189,7 @@
         applyTraitToClip(unit * 4, unit * 1, unit * 2, unit * 2, clipFn, [getRandomTraitFn()]);
       });
 
-      // MOUTH (2x4 with rounded bottom corners)
+      // MOUTH
       applyTraitToClip(unit * 2, unit * 3, unit * 4, unit * 2, () => {
         ctx.beginPath();
         ctx.moveTo(unit * 2, unit * 3);
@@ -203,7 +202,7 @@
         ctx.closePath();
       });
 
-      // LOWER BAR (1x4 with rounded top corners)
+      // LOWER BAR
       applyTraitToClip(unit * 2, unit * 6, unit * 4, unit, () => {
         ctx.beginPath();
         ctx.moveTo(unit * 2, unit * 7);
@@ -221,15 +220,21 @@
       drawBaseOpepen();
     }
 
-    function downloadPNG() {
-      const link = document.createElement("a");
-      link.download = "mindprint.png";
-      link.href = canvas.toDataURL("image/png");
-      link.click();
-    }
-
     function downloadGIF() {
-      alert("GIF export coming soon — stay tuned!");
+      const gif = new GIF({ workers: 2, quality: 10, width: 768, height: 768 });
+      for (let i = 0; i < 20; i++) {
+        renderTraits();
+        gif.addFrame(ctx, { copy: true, delay: 100 });
+        frame++;
+      }
+      gif.on('finished', function(blob) {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'mindprint.gif';
+        link.click();
+      });
+      gif.render();
     }
 
     document.getElementById("regenerate").addEventListener("click", generateArt);
