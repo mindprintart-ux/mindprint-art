@@ -11,12 +11,13 @@
   </style>
 </head>
 <body>
-  <h1>mindprint.art – Opepen Grid-Aligned Generator</h1>
+  <h1>mindprint.art – Opepen Curvy Generator</h1>
   <canvas id="mindprint" width="768" height="768"></canvas>
   <br>
   <button onclick="generateArt()">🔁 Regenerate</button>
   <button onclick="downloadPNG()">📥 Export PNG</button>
   <button onclick="downloadSVG()">📥 Export SVG (outline only)</button>
+  <button onclick="downloadHighResPNG()">📸 Export High-Res PNG (2500x2500)</button>
 
   <script>
     const canvas = document.getElementById("mindprint");
@@ -27,15 +28,33 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    function drawSolidColor(x, y, w, h, color = "#FFD700") {
-      ctx.fillStyle = color;
-      ctx.fillRect(x, y, w, h);
+    function drawRoundedRect(x, y, w, h, rtl, rtr, rbr, rbl, fill = true) {
+      ctx.beginPath();
+      ctx.moveTo(x + rtl, y);
+      ctx.lineTo(x + w - rtr, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + rtr);
+      ctx.lineTo(x + w, y + h - rbr);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - rbr, y + h);
+      ctx.lineTo(x + rbl, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - rbl);
+      ctx.lineTo(x, y + rtl);
+      ctx.quadraticCurveTo(x, y, x + rtl, y);
+      ctx.closePath();
+      if (fill) ctx.fill();
     }
+
+    const traitFunctions = [
+      drawDiagonalStripes,
+      drawNoiseFill,
+      drawDotGrid,
+      drawRadialBurst,
+      drawConcentricCircles,
+      drawWaves,
+    ];
 
     function drawDiagonalStripes(x, y, w, h, color = "white") {
       ctx.save();
-      ctx.beginPath();
-      ctx.rect(x, y, w, h);
+      drawRoundedRect(x, y, w, h, 20, 20, 20, 20, false);
       ctx.clip();
       ctx.strokeStyle = color;
       ctx.lineWidth = 2;
@@ -61,6 +80,9 @@
     }
 
     function drawDotGrid(x, y, w, h, spacing = 12) {
+      ctx.save();
+      drawRoundedRect(x, y, w, h, 20, 20, 20, 20, false);
+      ctx.clip();
       ctx.fillStyle = "white";
       for (let i = x + spacing / 2; i < x + w; i += spacing) {
         for (let j = y + spacing / 2; j < y + h; j += spacing) {
@@ -69,6 +91,7 @@
           ctx.fill();
         }
       }
+      ctx.restore();
     }
 
     function drawRadialBurst(x, y, w, h) {
@@ -77,8 +100,7 @@
       ctx.strokeStyle = 'white';
       ctx.lineWidth = 1.2;
       ctx.save();
-      ctx.beginPath();
-      ctx.rect(x, y, w, h);
+      drawRoundedRect(x, y, w, h, 20, 20, 20, 20, false);
       ctx.clip();
       for (let i = 0; i < 100; i++) {
         const angle = (Math.PI * 2 * i) / 100;
@@ -96,8 +118,7 @@
       ctx.strokeStyle = 'white';
       ctx.lineWidth = 1.5;
       ctx.save();
-      ctx.beginPath();
-      ctx.rect(x, y, w, h);
+      drawRoundedRect(x, y, w, h, 20, 20, 20, 20, false);
       ctx.clip();
       for (let r = 10; r < Math.min(w, h) / 1.2; r += 10) {
         ctx.beginPath();
@@ -111,8 +132,7 @@
       ctx.strokeStyle = 'white';
       ctx.lineWidth = 1.2;
       ctx.save();
-      ctx.beginPath();
-      ctx.rect(x, y, w, h);
+      drawRoundedRect(x, y, w, h, 20, 20, 20, 20, false);
       ctx.clip();
       for (let j = y; j < y + h; j += 8) {
         ctx.beginPath();
@@ -125,53 +145,28 @@
       ctx.restore();
     }
 
-    const traitFunctions = [
-      drawSolidColor,
-      drawDiagonalStripes,
-      drawNoiseFill,
-      drawDotGrid,
-      drawRadialBurst,
-      drawConcentricCircles,
-      drawWaves
-    ];
-
     function drawRandomTrait(x, y, w, h) {
       const trait = traitFunctions[Math.floor(Math.random() * traitFunctions.length)];
       trait(x, y, w, h);
     }
 
     function drawBaseOpepen() {
-      drawRandomTrait(unit * 2, unit * 1, unit * 2, unit * 2); // Left Eye
-      drawRandomTrait(unit * 4, unit * 1, unit * 2, unit * 2); // Right Eye
-      drawRandomTrait(unit * 2, unit * 3, unit * 4, unit * 2); // Mouth
-      drawRandomTrait(unit * 2, unit * 6, unit * 4, unit);     // Lower Bar
+      drawRoundedRect(unit * 2, unit * 1, unit * 2, unit * 2, 24, 24, 24, 24); // Left Eye
+      drawRandomTrait(unit * 2, unit * 1, unit * 2, unit * 2);
+
+      drawRoundedRect(unit * 4, unit * 1, unit * 2, unit * 2, 24, 24, 24, 24); // Right Eye
+      drawRandomTrait(unit * 4, unit * 1, unit * 2, unit * 2);
+
+      drawRoundedRect(unit * 2, unit * 3, unit * 4, unit * 2, 0, 0, 24, 24);   // Mouth
+      drawRandomTrait(unit * 2, unit * 3, unit * 4, unit * 2);
+
+      drawRoundedRect(unit * 2, unit * 6, unit * 4, unit, 24, 24, 0, 0);       // Lower Bar
+      drawRandomTrait(unit * 2, unit * 6, unit * 4, unit);
     }
 
     function generateArt() {
       clearCanvas();
       drawBaseOpepen();
-    }
-
-    function downloadPNG() {
-      const link = document.createElement('a');
-      link.download = 'mindprint.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-    }
-
-    function downloadSVG() {
-      const svgContent = `<?xml version="1.0" encoding="UTF-8"?>
-        <svg xmlns="http://www.w3.org/2000/svg" width="768" height="768" viewBox="0 0 768 768">
-          <rect x="192" y="96" width="192" height="192" fill="#FFD700" />
-          <rect x="384" y="96" width="192" height="192" fill="none" stroke="white" stroke-width="2" stroke-dasharray="10 5" />
-          <rect x="192" y="288" width="384" height="192" fill="gray" fill-opacity="0.2" />
-          <rect x="192" y="576" width="384" height="96" fill="none" stroke="white" stroke-width="1" />
-        </svg>`;
-      const blob = new Blob([svgContent], { type: 'image/svg+xml' });
-      const link = document.createElement('a');
-      link.download = 'mindprint.svg';
-      link.href = URL.createObjectURL(blob);
-      link.click();
     }
 
     generateArt();
