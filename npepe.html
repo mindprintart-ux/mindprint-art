@@ -12,7 +12,7 @@
 </head>
 <body>
   <h1>mindprint.art – Opepen Grid-Aligned Generator</h1>
-  <canvas id="mindprint" width="2500" height="2500"></canvas>
+  <canvas id="mindprint" width="768" height="768"></canvas>
   <br>
   <button onclick="generateArt()">🔁 Regenerate</button>
   <button onclick="downloadPNG()">📥 Export PNG</button>
@@ -161,7 +161,7 @@
 
     function downloadSVG() {
       const svgContent = `<?xml version="1.0" encoding="UTF-8"?>
-        <svg xmlns="http://www.w3.org/2000/svg" width="2500" height="2500" viewBox="0 0 768 768">
+        <svg xmlns="http://www.w3.org/2000/svg" width="768" height="768" viewBox="0 0 768 768">
           <rect x="192" y="96" width="192" height="192" fill="#FFD700" />
           <rect x="384" y="96" width="192" height="192" fill="none" stroke="white" stroke-width="2" stroke-dasharray="10 5" />
           <rect x="192" y="288" width="384" height="192" fill="gray" fill-opacity="0.2" />
