@@ -27,7 +27,7 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    function drawSolidColor(x, y, w, h, color) {
+    function drawSolidColor(x, y, w, h, color = "#FFD700") {
       ctx.fillStyle = color;
       ctx.fillRect(x, y, w, h);
     }
@@ -71,11 +71,18 @@
       }
     }
 
+    const traitFunctions = [drawSolidColor, drawDiagonalStripes, drawNoiseFill, drawDotGrid];
+
+    function drawRandomTrait(x, y, w, h) {
+      const trait = traitFunctions[Math.floor(Math.random() * traitFunctions.length)];
+      trait(x, y, w, h);
+    }
+
     function drawBaseOpepen() {
-      drawSolidColor(unit * 2, unit * 1, unit * 2, unit * 2, "#FFD700");
-      drawDiagonalStripes(unit * 4, unit * 1, unit * 2, unit * 2);
-      drawNoiseFill(unit * 2, unit * 3, unit * 4, unit * 2);
-      drawDotGrid(unit * 2, unit * 6, unit * 4, unit);
+      drawRandomTrait(unit * 2, unit * 1, unit * 2, unit * 2); // Left Eye
+      drawRandomTrait(unit * 4, unit * 1, unit * 2, unit * 2); // Right Eye
+      drawRandomTrait(unit * 2, unit * 3, unit * 4, unit * 2); // Mouth
+      drawRandomTrait(unit * 2, unit * 6, unit * 4, unit);     // Lower Bar
     }
 
     function generateArt() {
