@@ -28,12 +28,12 @@
     }
 
     const traitFunctions = [
-      drawDiagonalStripes,
       drawNoiseFill,
       drawDotGrid,
       drawRadialBurst,
       drawConcentricCircles,
       drawWaves,
+      drawDiagonalStripes,
     ];
 
     function getRandomTraitFn() {
@@ -52,7 +52,6 @@
     }
 
     function drawBaseOpepen() {
-      // LEFT EYE — 3 arcs + 1 square (each with its own fill, preserving structure)
       const shapes = [
         () => {
           ctx.beginPath();
@@ -82,7 +81,6 @@
         applyTraitToClip(unit * 2, unit * 1, unit * 2, unit * 2, clipFn, [getRandomTraitFn()]);
       });
 
-      // RIGHT EYE — full circle, optionally with multiple traits
       const rightEyeClip = () => {
         ctx.beginPath();
         ctx.arc(unit * 5, unit * 2, unit, 0, Math.PI * 2);
@@ -90,7 +88,6 @@
       };
       applyTraitToClip(unit * 4, unit * 1, unit * 2, unit * 2, rightEyeClip, [getRandomTraitFn(), getRandomTraitFn()]);
 
-      // MOUTH — rounded bottom corners
       applyTraitToClip(unit * 2, unit * 3, unit * 4, unit * 2, () => {
         ctx.beginPath();
         ctx.moveTo(unit * 2, unit * 3);
@@ -103,7 +100,6 @@
         ctx.closePath();
       });
 
-      // LOWER BAR — rounded top corners
       applyTraitToClip(unit * 2, unit * 6, unit * 4, unit, () => {
         ctx.beginPath();
         ctx.moveTo(unit * 2, unit * 7);
@@ -117,7 +113,78 @@
       });
     }
 
-    // Existing trait functions remain unchanged...
+    function drawDiagonalStripes(x, y, w, h) {
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 1.2;
+      for (let i = -w; i < w + h; i += 10) {
+        ctx.beginPath();
+        ctx.moveTo(x + i, y);
+        ctx.lineTo(x + i + h, y + h);
+        ctx.stroke();
+      }
+    }
+
+    function drawNoiseFill(x, y, w, h) {
+      const imageData = ctx.createImageData(w, h);
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        const val = Math.random() * 255;
+        imageData.data[i] = val;
+        imageData.data[i + 1] = val;
+        imageData.data[i + 2] = val;
+        imageData.data[i + 3] = 100;
+      }
+      ctx.putImageData(imageData, x, y);
+    }
+
+    function drawDotGrid(x, y, w, h, spacing = 12) {
+      ctx.fillStyle = "white";
+      for (let i = x + spacing / 2; i < x + w; i += spacing) {
+        for (let j = y + spacing / 2; j < y + h; j += spacing) {
+          ctx.beginPath();
+          ctx.arc(i, j, 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+
+    function drawRadialBurst(x, y, w, h) {
+      const cx = x + w / 2;
+      const cy = y + h / 2;
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 1.2;
+      for (let i = 0; i < 100; i++) {
+        const angle = (Math.PI * 2 * i) / 100;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + Math.cos(angle) * w, cy + Math.sin(angle) * h);
+        ctx.stroke();
+      }
+    }
+
+    function drawConcentricCircles(x, y, w, h) {
+      const cx = x + w / 2;
+      const cy = y + h / 2;
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 1.5;
+      for (let r = 10; r < Math.min(w, h) / 1.2; r += 10) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+    }
+
+    function drawWaves(x, y, w, h) {
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 1.2;
+      for (let j = y; j < y + h; j += 8) {
+        ctx.beginPath();
+        for (let i = x; i < x + w; i++) {
+          const wave = Math.sin(i * 0.05 + j * 0.1) * 6;
+          ctx.lineTo(i, j + wave);
+        }
+        ctx.stroke();
+      }
+    }
 
     function downloadPNG() {
       const link = document.createElement('a');
