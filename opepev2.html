@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mindprint Filler Engine</title>
+  <style>
+    body { background: #000; color: #fff; font-family: sans-serif; text-align: center; }
+    canvas { background: #111; margin-top: 1em; border-radius: 12px; }
+    button { margin: 0.5em; padding: 8px 16px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h1>mindprint.art – Opepen Grid-Aligned Generator</h1>
+  <canvas id="mindprint" width="768" height="768"></canvas>
+  <br>
+  <button onclick="generateArt()">🔁 Regenerate</button>
+  <button onclick="downloadPNG()">📥 Export PNG</button>
+  <button onclick="downloadHighResPNG()">📸 Export High-Res PNG (2500x2500)</button>
+
+  <script>
+    const canvas = document.getElementById("mindprint");
+    const ctx = canvas.getContext("2d");
+    const unit = 96;
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    const traitFunctions = [
+      drawDiagonalStripes,
+      drawNoiseFill,
+      drawDotGrid,
+      drawRadialBurst,
+      drawConcentricCircles,
+      drawWaves,
+    ];
+
+    function getRandomTraitFn() {
+      return traitFunctions[Math.floor(Math.random() * traitFunctions.length)];
+    }
+
+    function applyTraitToClip(x, y, w, h, clipFn, traitFns = [getRandomTraitFn()]) {
+      const numTraits = traitFns.length;
+      ctx.save();
+      clipFn();
+      ctx.clip();
+      for (let i = 0; i < numTraits; i++) {
+        traitFns[i](x, y, w, h);
+      }
+      ctx.restore();
+    }
+
+    function drawBaseOpepen() {
+      // LEFT EYE — 3 arcs + 1 square (each with its own fill, preserving structure)
+      const shapes = [
+        () => {
+          ctx.beginPath();
+          ctx.rect(unit * 2, unit * 1, unit, unit);
+          ctx.closePath();
+        },
+        () => {
+          ctx.beginPath();
+          ctx.moveTo(unit * 3, unit * 2);
+          ctx.arc(unit * 3, unit * 2, unit, -Math.PI / 2, 0);
+          ctx.closePath();
+        },
+        () => {
+          ctx.beginPath();
+          ctx.moveTo(unit * 3, unit * 2);
+          ctx.arc(unit * 3, unit * 2, unit, 0, Math.PI / 2);
+          ctx.closePath();
+        },
+        () => {
+          ctx.beginPath();
+          ctx.moveTo(unit * 3, unit * 2);
+          ctx.arc(unit * 3, unit * 2, unit, Math.PI / 2, Math.PI);
+          ctx.closePath();
+        },
+      ];
+      shapes.forEach(clipFn => {
+        applyTraitToClip(unit * 2, unit * 1, unit * 2, unit * 2, clipFn, [getRandomTraitFn()]);
+      });
+
+      // RIGHT EYE — full circle, optionally with multiple traits
+      const rightEyeClip = () => {
+        ctx.beginPath();
+        ctx.arc(unit * 5, unit * 2, unit, 0, Math.PI * 2);
+        ctx.closePath();
+      };
+      applyTraitToClip(unit * 4, unit * 1, unit * 2, unit * 2, rightEyeClip, [getRandomTraitFn(), getRandomTraitFn()]);
+
+      // MOUTH — rounded bottom corners
+      applyTraitToClip(unit * 2, unit * 3, unit * 4, unit * 2, () => {
+        ctx.beginPath();
+        ctx.moveTo(unit * 2, unit * 3);
+        ctx.lineTo(unit * 6, unit * 3);
+        ctx.lineTo(unit * 6, unit * 5 - 24);
+        ctx.quadraticCurveTo(unit * 6, unit * 5, unit * 6 - 24, unit * 5);
+        ctx.lineTo(unit * 2 + 24, unit * 5);
+        ctx.quadraticCurveTo(unit * 2, unit * 5, unit * 2, unit * 5 - 24);
+        ctx.lineTo(unit * 2, unit * 3);
+        ctx.closePath();
+      });
+
+      // LOWER BAR — rounded top corners
+      applyTraitToClip(unit * 2, unit * 6, unit * 4, unit, () => {
+        ctx.beginPath();
+        ctx.moveTo(unit * 2, unit * 7);
+        ctx.lineTo(unit * 6, unit * 7);
+        ctx.lineTo(unit * 6, unit * 6 + 24);
+        ctx.quadraticCurveTo(unit * 6, unit * 6, unit * 6 - 24, unit * 6);
+        ctx.lineTo(unit * 2 + 24, unit * 6);
+        ctx.quadraticCurveTo(unit * 2, unit * 6, unit * 2, unit * 6 + 24);
+        ctx.lineTo(unit * 2, unit * 7);
+        ctx.closePath();
+      });
+    }
+
+    // Existing trait functions remain unchanged...
+
+    function downloadPNG() {
+      const link = document.createElement('a');
+      link.download = 'opepen.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    function downloadHighResPNG() {
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = 2500;
+      tempCanvas.height = 2500;
+      const tempCtx = tempCanvas.getContext('2d');
+
+      const scale = 2500 / 768;
+      tempCtx.scale(scale, scale);
+      drawBaseOpepenScaled(tempCtx);
+
+      const link = document.createElement('a');
+      link.download = 'opepen_highres.png';
+      link.href = tempCanvas.toDataURL('image/png');
+      link.click();
+    }
+
+    function drawBaseOpepenScaled(context) {
+      const prevCtx = ctx;
+      ctx = context;
+      drawBaseOpepen();
+      ctx = prevCtx;
+    }
+
+    function generateArt() {
+      clearCanvas();
+      drawBaseOpepen();
+    }
+
+    generateArt();
+  </script>
+</body>
+</html>
