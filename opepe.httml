@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mindprint Filler Engine</title>
+  <style>
+    body { background: #000; color: #fff; font-family: sans-serif; text-align: center; }
+    canvas { background: #111; margin-top: 1em; border-radius: 12px; }
+    button { margin: 0.5em; padding: 8px 16px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h1>mindprint.art – Opepen Grid-Aligned Generator</h1>
+  <canvas id="mindprint" width="768" height="768"></canvas>
+  <br>
+  <button onclick="generateArt()">🔁 Regenerate</button>
+  <button onclick="downloadPNG()">📥 Export PNG</button>
+  <button onclick="downloadHighResPNG()">📸 Export High-Res PNG (2500x2500)</button>
+
+  <script>
+    const canvas = document.getElementById("mindprint");
+    const ctx = canvas.getContext("2d");
+    const unit = 96;
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    const traitFunctions = [
+      drawDiagonalStripes,
+      drawNoiseFill,
+      drawDotGrid,
+      drawRadialBurst,
+      drawConcentricCircles,
+      drawWaves,
+    ];
+
+    function getRandomTraitFn() {
+      return traitFunctions[Math.floor(Math.random() * traitFunctions.length)];
+    }
+
+    function applyTraitToClip(x, y, w, h, clipFn, traitFn = getRandomTraitFn()) {
+      ctx.save();
+      clipFn();
+      ctx.clip();
+      traitFn(x, y, w, h);
+      ctx.restore();
+    }
+
+    function drawBaseOpepen() {
+      // LEFT EYE — 3 arcs + 1 square
+      const leftEyeClip = () => {
+        ctx.beginPath();
+        // Top-left square
+        ctx.rect(unit * 2, unit * 1, unit, unit);
+        // Top-right arc
+        ctx.moveTo(unit * 3, unit * 2);
+        ctx.arc(unit * 3, unit * 2, unit, -Math.PI / 2, 0);
+        // Bottom-right arc
+        ctx.moveTo(unit * 3, unit * 2);
+        ctx.arc(unit * 3, unit * 2, unit, 0, Math.PI / 2);
+        // Bottom-left arc
+        ctx.moveTo(unit * 3, unit * 2);
+        ctx.arc(unit * 3, unit * 2, unit, Math.PI / 2, Math.PI);
+        ctx.closePath();
+      };
+      applyTraitToClip(unit * 2, unit * 1, unit * 2, unit * 2, leftEyeClip);
+
+      // RIGHT EYE — full circle
+      applyTraitToClip(unit * 4, unit * 1, unit * 2, unit * 2, () => {
+        ctx.beginPath();
+        ctx.arc(unit * 5, unit * 2, unit, 0, Math.PI * 2);
+        ctx.closePath();
+      });
+
+      // MOUTH — rounded bottom corners
+      applyTraitToClip(unit * 2, unit * 3, unit * 4, unit * 2, () => {
+        ctx.beginPath();
+        ctx.moveTo(unit * 2, unit * 3);
+        ctx.lineTo(unit * 6, unit * 3);
+        ctx.lineTo(unit * 6, unit * 5 - 24);
+        ctx.quadraticCurveTo(unit * 6, unit * 5, unit * 6 - 24, unit * 5);
+        ctx.lineTo(unit * 2 + 24, unit * 5);
+        ctx.quadraticCurveTo(unit * 2, unit * 5, unit * 2, unit * 5 - 24);
+        ctx.lineTo(unit * 2, unit * 3);
+        ctx.closePath();
+      });
+
+      // LOWER BAR — rounded top corners
+      applyTraitToClip(unit * 2, unit * 6, unit * 4, unit, () => {
+        ctx.beginPath();
+        ctx.moveTo(unit * 2, unit * 7);
+        ctx.lineTo(unit * 6, unit * 7);
+        ctx.lineTo(unit * 6, unit * 6 + 24);
+        ctx.quadraticCurveTo(unit * 6, unit * 6, unit * 6 - 24, unit * 6);
+        ctx.lineTo(unit * 2 + 24, unit * 6);
+        ctx.quadraticCurveTo(unit * 2, unit * 6, unit * 2, unit * 6 + 24);
+        ctx.lineTo(unit * 2, unit * 7);
+        ctx.closePath();
+      });
+    }
+
+    function drawDiagonalStripes(x, y, w, h, color = "white") {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      for (let i = -w; i < w + h; i += 10) {
+        ctx.beginPath();
+        ctx.moveTo(x + i, y);
+        ctx.lineTo(x + i + h, y + h);
+        ctx.stroke();
+      }
+    }
+
+    function drawNoiseFill(x, y, w, h) {
+      const imageData = ctx.createImageData(w, h);
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        const val = Math.random() * 255;
+        imageData.data[i] = val;
+        imageData.data[i + 1] = val;
+        imageData.data[i + 2] = val;
+        imageData.data[i + 3] = 100;
+      }
+      ctx.putImageData(imageData, x, y);
+    }
+
+    function drawDotGrid(x, y, w, h, spacing = 12) {
+      ctx.fillStyle = "white";
+      for (let i = x + spacing / 2; i < x + w; i += spacing) {
+        for (let j = y + spacing / 2; j < y + h; j += spacing) {
+          ctx.beginPath();
+          ctx.arc(i, j, 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+
+    function drawRadialBurst(x, y, w, h) {
+      const cx = x + w / 2;
+      const cy = y + h / 2;
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 1.2;
+      for (let i = 0; i < 100; i++) {
+        const angle = (Math.PI * 2 * i) / 100;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + Math.cos(angle) * w, cy + Math.sin(angle) * h);
+        ctx.stroke();
+      }
+    }
+
+    function drawConcentricCircles(x, y, w, h) {
+      const cx = x + w / 2;
+      const cy = y + h / 2;
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 1.5;
+      for (let r = 10; r < Math.min(w, h) / 1.2; r += 10) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+    }
+
+    function drawWaves(x, y, w, h) {
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 1.2;
+      for (let j = y; j < y + h; j += 8) {
+        ctx.beginPath();
+        for (let i = x; i < x + w; i++) {
+          const wave = Math.sin(i * 0.05 + j * 0.1) * 6;
+          ctx.lineTo(i, j + wave);
+        }
+        ctx.stroke();
+      }
+    }
+
+    function downloadPNG() {
+      const link = document.createElement('a');
+      link.download = 'opepen.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+
+    function downloadHighResPNG() {
+      const tempCanvas = document.createElement('canvas');
+      tempCanvas.width = 2500;
+      tempCanvas.height = 2500;
+      const tempCtx = tempCanvas.getContext('2d');
+
+      // scale drawing
+      const scale = 2500 / 768;
+      tempCtx.scale(scale, scale);
+      drawBaseOpepenScaled(tempCtx);
+
+      const link = document.createElement('a');
+      link.download = 'opepen_highres.png';
+      link.href = tempCanvas.toDataURL('image/png');
+      link.click();
+    }
+
+    function drawBaseOpepenScaled(context) {
+      const prevCtx = ctx;
+      ctx = context;
+      drawBaseOpepen();
+      ctx = prevCtx;
+    }
+
+    function generateArt() {
+      clearCanvas();
+      drawBaseOpepen();
+    }
+
+    generateArt();
+  </script>
+</body>
+</html>
