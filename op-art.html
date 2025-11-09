@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="en">
+<head>
+<link rel="icon" href="/favicon.ico">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b0d12">
+
+<!-- Open Graph / Twitter -->
+<meta property="og:title" content="mindprint.art">
+<meta property="og:description" content="Op Art, vibes, and unlockable tools.">
+<meta property="og:image" content="/og.png">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mindprint.art/op-art.html">
+<meta name="twitter:card" content="summary_large_image">  
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Op Art Vibe Lab — mindprint.art</title>
+<style>
+  :root{
+    --bg:#0a0a0a; --panel:#111318; --ink:#000000; --paper:#ffffff; --accent:#82e2ff;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:var(--bg);color:#e7e7e7;font:14px/1.45 system-ui,Segoe UI,Roboto,Inter,Arial}
+  .app{display:grid;grid-template-columns:1fr 360px;gap:18px;max-width:1400px;margin:24px auto;padding:12px}
+  .stage-wrap{display:grid;place-items:center;background:linear-gradient(180deg,#0b0d12,#07080b);border-radius:18px;padding:16px;box-shadow:0 20px 60px rgba(0,0,0,.5) inset, 0 0 0 1px rgba(255,255,255,.05)}
+  .stage{width:min(80vmin,920px);aspect-ratio:1/1;background:#000;border-radius:16px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.5), 0 0 0 10px #000}
+  .panel{background:var(--panel);border-radius:18px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.06);position:relative}
+  h1{font-size:18px;margin:0 0 6px 0;letter-spacing:.3px}
+  .sub{opacity:.75;font-size:12px;margin-bottom:12px}
+  .controls{display:grid;gap:10px;max-height:80vh;overflow:auto;scrollbar-color:#2a2f3a transparent;padding-right:6px}
+  .group{border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:10px;background:rgba(255,255,255,.02)}
+  .group h2{font-size:13px;margin:0 0 8px 0;opacity:.9}
+  .row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin:6px 0}
+  label{opacity:.9;font-size:12px}
+  input[type="range"], select{width:100%}
+  .val{font-variant-numeric:tabular-nums;opacity:.75}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .btn{appearance:none;border:1px solid rgba(255,255,255,.15);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));color:#fff;padding:8px 10px;border-radius:10px;cursor:pointer}
+  .btn:hover{border-color:rgba(255,255,255,.28)}
+  .btn:active{transform:translateY(1px)}
+  .muted{opacity:.75}
+  .swatch{display:flex;gap:8px}
+  .swatch input[type="color"]{width:100%;height:34px;border:none;background:#000;border-radius:8px;padding:0}
+  .notice{font-size:12px;opacity:.7;margin-top:4px}
+  .lock{display:flex;gap:8px;align-items:flex-start;background:rgba(255,255,255,.03);border:1px dashed rgba(255,255,255,.2);padding:10px;border-radius:10px}
+  .lock svg{opacity:.9;flex:0 0 auto}
+  .ok{color:#6dff8b}
+
+  /* Unlock modal */
+  .modal{position:fixed;inset:0;display:none;place-items:center;background:rgba(0,0,0,.6);z-index:1000}
+  .modal .card{width:min(680px, 92vw);background:#10131a;border:1px solid rgba(255,255,255,.08);border-radius:14px;box-shadow:0 20px 80px rgba(0,0,0,.6)}
+  .card h3{margin:0;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);font-size:16px}
+  .card .body{padding:14px 16px;display:grid;gap:10px}
+  .card textarea{width:100%;min-height:80px;background:#0b0e14;border:1px solid rgba(255,255,255,.12);border-radius:10px;color:#fff;padding:10px;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+  .card .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .card .foot{display:flex;gap:10px;padding:14px 16px;border-top:1px solid rgba(255,255,255,.08);justify-content:flex-end}
+  .badge{display:inline-flex;gap:6px;align-items:center;background:#0f1722;border:1px solid rgba(130,226,255,.3);color:#bfefff;border-radius:999px;padding:4px 8px;font-size:12px}
+  .wm{position:absolute;right:10px;bottom:10px;font-size:10px;letter-spacing:.5px;color:rgba(255,255,255,.5);}
+</style>
+</head>
+<body>
+  <div class="app">
+    <div class="stage-wrap">
+      <svg id="art" class="stage" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg" aria-label="Op Art generator (Lite, unlockable)">
+        <defs>
+          <pattern id="lines" patternUnits="userSpaceOnUse" width="12" height="12" patternTransform="rotate(0)">
+            <rect id="paperRect" width="12" height="12" fill="#ffffff"/>
+            <rect id="inkRect" y="0" width="12" height="6" fill="#000000"/>
+          </pattern>
+          <pattern id="lines2" patternUnits="userSpaceOnUse" width="12" height="12" patternTransform="rotate(2)">
+            <rect id="paperRect2" width="12" height="12" fill="#ffffff"/>
+            <rect id="inkRect2" y="0" width="12" height="6" fill="#000000"/>
+          </pattern>
+          <filter id="warp" x="-20%" y="-20%" width="140%" height="140%">
+            <feTurbulence id="noise" type="fractalNoise" baseFrequency="0.008 0.008" numOctaves="2" seed="2" result="n"/>
+            <feDisplacementMap id="disp" in="SourceGraphic" in2="n" scale="35" xChannelSelector="R" yChannelSelector="G"/>
+          </filter>
+        </defs>
+        <rect id="baseField" width="100%" height="100%" fill="url(#lines)" filter="url(#warp)"/>
+        <rect id="overlayField" width="100%" height="100%" fill="url(#lines2)" opacity="0"/>
+        <text id="wmText" class="wm" x="790" y="790" text-anchor="end">Lite</text>
+      </svg>
+    </div>
+
+    <aside class="panel">
+      <h1>Op Art Vibe Lab — Lite</h1>
+      <div class="sub">Static generator (SVG export). <span class="badge">Pro locked</span></div>
+      <div class="controls">
+        <div class="group">
+          <h2>Stripes</h2>
+          <div class="row"><label>Period (px)</label><output id="periodVal" class="val">12</output></div>
+          <input id="period" type="range" min="2" max="80" value="12" step="1" />
+          <div class="row"><label>Line thickness (px)</label><output id="thickVal" class="val">6</output></div>
+          <input id="thickness" type="range" min="1" max="79" value="6" step="1" />
+          <div class="grid2">
+            <button class="btn" id="orientH">Horizontal</button>
+            <button class="btn" id="orientV">Vertical</button>
+          </div>
+          <div class="row"><label>Overlay moiré opacity</label><output id="overlayVal" class="val">0</output></div>
+          <input id="overlay" type="range" min="0" max="100" value="0" step="1" />
+          <div class="row"><label>Overlay angle (°)</label><output id="overlayAngVal" class="val">2</output></div>
+          <input id="overlayAngle" type="range" min="-10" max="10" value="2" step="0.1" />
+        </div>
+
+        <div class="group">
+          <h2>Warp (Noise)</h2>
+          <div class="row"><label>Base Frequency X</label><output id="fxVal" class="val">0.008</output></div>
+          <input id="fx" type="range" min="0.001" max="0.05" value="0.008" step="0.001" />
+          <div class="row"><label>Base Frequency Y</label><output id="fyVal" class="val">0.008</output></div>
+          <input id="fy" type="range" min="0.001" max="0.05" value="0.008" step="0.001" />
+          <div class="row"><label>Scale</label><output id="scaleVal" class="val">35</output></div>
+          <input id="scale" type="range" min="0" max="200" value="35" step="1" />
+          <div class="row"><label>Octaves</label><output id="octVal" class="val">2</output></div>
+          <input id="oct" type="range" min="1" max="6" value="2" step="1" />
+          <div class="row"><label>Seed</label><output id="seedVal" class="val">2</output></div>
+          <input id="seed" type="range" min="0" max="9999" value="2" step="1" />
+          <div class="grid2">
+            <button class="btn" id="randomSeed">Random seed</button>
+            <button class="btn" id="reset">Reset</button>
+          </div>
+        </div>
+
+        <div class="group">
+          <h2>Colors</h2>
+          <div class="swatch">
+            <div>
+              <label class="muted">Paper</label>
+              <input id="paperColor" type="color" value="#ffffff" />
+            </div>
+            <div>
+              <label class="muted">Ink</label>
+              <input id="inkColor" type="color" value="#000000" />
+            </div>
+          </div>
+          <div class="switch" style="margin-top:8px"><input id="invert" type="checkbox" /><label for="invert">Invert</label></div>
+        </div>
+
+        <div class="group">
+          <h2>Export</h2>
+          <div class="grid2">
+            <button class="btn" id="downloadSvg">Download SVG</button>
+            <button class="btn" id="copySvg">Copy SVG</button>
+          </div>
+          <div class="notice">SVG stays vector-perfect for print. For PNG, open in a browser/vector app and export at 300–600 DPI.</div>
+        </div>
+
+        <div class="group">
+          <h2>Animation <span class="muted">(Pro)</span></h2>
+          <div class="lock">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 10V8a5 5 0 1 1 10 0v2" stroke="#ddd" stroke-width="1.5" stroke-linecap="round"/><rect x="4" y="10" width="16" height="10" rx="2" stroke="#ddd" stroke-width="1.5"/><circle cx="12" cy="15" r="1.8" fill="#ddd"/></svg>
+            <div>
+              Animation & WebM export are locked. <button class="btn" id="unlockBtn">Unlock Pro</button>
+              <div class="notice">Holders of the NFT can unlock locally with a signed message (no server required).</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Optional: ethers v5 UMD for signature verification + on-chain check (public RPC). -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+
+<script>
+(function(){
+  'use strict';
+  const $ = (s, r=document) => r.querySelector(s);
+  const art = $('#art');
+  if(!art){ console.error('SVG #art not found'); return; }
+
+  // --- DOM refs
+  const pattern = $('#lines');
+  const pattern2 = $('#lines2');
+  const paper = $('#paperRect');
+  const ink = $('#inkRect');
+  const paper2 = $('#paperRect2');
+  const ink2 = $('#inkRect2');
+  const noise = $('#noise');
+  const disp = $('#disp');
+  const overlay = $('#overlayField');
+  const wmText = $('#wmText');
+
+  const period = $('#period'); const periodVal = $('#periodVal');
+  const thickness = $('#thickness'); const thickVal = $('#thickVal');
+  const orientH = $('#orientH'); const orientV = $('#orientV');
+  const overlayRange = $('#overlay'); const overlayVal = $('#overlayVal');
+  const overlayAngle = $('#overlayAngle'); const overlayAngVal = $('#overlayAngVal');
+  const fx = $('#fx'); const fxVal = $('#fxVal');
+  const fy = $('#fy'); const fyVal = $('#fyVal');
+  const scale = $('#scale'); const scaleVal = $('#scaleVal');
+  const oct = $('#oct'); const octVal = $('#octVal');
+  const seed = $('#seed'); const seedVal = $('#seedVal');
+  const randomSeed = $('#randomSeed'); const resetBtn = $('#reset');
+  const paperColor = $('#paperColor'); const inkColor = $('#inkColor'); const invert = $('#invert');
+  const downloadSvg = $('#downloadSvg'); const copySvg = $('#copySvg');
+  const unlockBtn = $('#unlockBtn');
+
+  // --- Pro gating settings (edit these)
+  const NFT_CONTRACT = '0xYourNftContractHere'; // ERC-721 default
+  const CHAIN_RPC = 'https://cloudflare-eth.com'; // public mainnet RPC (or your own)
+  const MODE = 'erc721'; // 'erc721' | 'erc1155'
+  const TOKEN_ID = '0'; // used only for ERC-1155
+
+  // --- State
+  let proUnlocked = false;
+
+  function clamp(v,min,max){ return Math.max(min, Math.min(max, v)); }
+
+  function applyStripes(){
+    const p = parseFloat(period.value);
+    const th = clamp(parseFloat(thickness.value), 0.5, p-0.5);
+    periodVal.textContent = String(p); thickVal.textContent = String(th);
+    pattern.setAttribute('width', p); pattern.setAttribute('height', p);
+    ink.setAttribute('height', th); paper.setAttribute('width', p); paper.setAttribute('height', p);
+    pattern2.setAttribute('width', p); pattern2.setAttribute('height', p);
+    ink2.setAttribute('height', th); paper2.setAttribute('width', p); paper2.setAttribute('height', p);
+  }
+  function applyOrientation(dir){ pattern.setAttribute('patternTransform', `rotate(${dir==='v'?90:0})`); }
+  function applyOverlay(){
+    const o = parseInt(overlayRange.value,10)/100; overlay.setAttribute('opacity', o.toFixed(3)); overlayVal.textContent = String(Math.round(o*100));
+    const ang = parseFloat(overlayAngle.value); overlayAngVal.textContent = String(ang); pattern2.setAttribute('patternTransform', `rotate(${ang})`);
+  }
+  function applyNoise(){
+    const x = parseFloat(fx.value), y = parseFloat(fy.value), sc = parseFloat(scale.value), oc = parseInt(oct.value,10), sd = parseInt(seed.value,10);
+    fxVal.textContent = x.toFixed(3); fyVal.textContent = y.toFixed(3); scaleVal.textContent = String(sc); octVal.textContent = String(oc); seedVal.textContent = String(sd);
+    noise.setAttribute('baseFrequency', `${x} ${y}`); noise.setAttribute('numOctaves', String(oc)); noise.setAttribute('seed', String(sd)); disp.setAttribute('scale', String(sc));
+  }
+  function applyColors(){
+    const paperC = paperColor.value, inkC = inkColor.value, inv = invert.checked;
+    if(!inv){ paper.setAttribute('fill', paperC); ink.setAttribute('fill', inkC); paper2.setAttribute('fill', paperC); ink2.setAttribute('fill', inkC); art.style.background = paperC; }
+    else { paper.setAttribute('fill', inkC); ink.setAttribute('fill', paperC); paper2.setAttribute('fill', inkC); ink2.setAttribute('fill', paperC); art.style.background = inkC; }
+  }
+  function randomize(){ seed.value = String(Math.floor(Math.random()*10000)); applyNoise(); }
+  function resetAll(){ period.value='12'; thickness.value='6'; applyStripes(); applyOrientation('h'); overlayRange.value='0'; overlayAngle.value='2'; applyOverlay(); fx.value='0.008'; fy.value='0.008'; scale.value='35'; oct.value='2'; seed.value='2'; applyNoise(); paperColor.value='#ffffff'; inkColor.value='#000000'; invert.checked=false; applyColors(); }
+  function serializeSvg(svg){ const clone = svg.cloneNode(true); if(!clone.getAttribute('xmlns')) clone.setAttribute('xmlns','http://www.w3.org/2000/svg'); return `<?xml version="1.0" encoding="UTF-8"?>\n` + new XMLSerializer().serializeToString(clone); }
+  function download(filename, text){ const blob = new Blob([text], {type:'image/svg+xml'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = filename; a.click(); setTimeout(()=>URL.revokeObjectURL(url), 3000); }
+
+  // --- Pro unlock modal (build lazily)
+  function buildModal(){
+    if($('#unlockModal')) return; // already built
+    const m = document.createElement('div'); m.className='modal'; m.id='unlockModal';
+    m.innerHTML = `
+      <div class="card">
+        <h3>Unlock Pro with a Signed Message</h3>
+        <div class="body">
+          <div class="notice">1) In a new tab, go to your verification page (e.g., <code>verify.mindprint.art</code>), connect wallet and sign the prepared message. 2) Paste the <b>message</b> and <b>signature</b> below. Nothing is sent to a server—verification happens locally.</div>
+          <div class="grid2">
+            <div>
+              <label>Signed Message</label>
+              <textarea id="signedMsg" placeholder="Paste the full message you signed (includes contract, nonce, expiry)"></textarea>
+            </div>
+            <div>
+              <label>Signature</label>
+              <textarea id="signedSig" placeholder="Paste 0x… signature"></textarea>
+            </div>
+          </div>
+          <div class="notice">Contract: <code id="ctAddr"></code> · Network: <code id="netLbl">Mainnet</code></div>
+          <div id="unlockState" class="notice">Waiting…</div>
+        </div>
+        <div class="foot">
+          <button class="btn" id="closeModal">Cancel</button>
+          <button class="btn" id="verifyUnlock">Verify & Unlock</button>
+        </div>
+      </div>`;
+    document.body.appendChild(m);
+    $('#ctAddr').textContent = NFT_CONTRACT;
+
+    $('#closeModal').addEventListener('click', ()=> m.style.display='none');
+    $('#verifyUnlock').addEventListener('click', verifyAndUnlock);
+  }
+
+  async function verifyAndUnlock(){
+    const status = $('#unlockState');
+    try{
+      if(!window.ethers){ status.textContent = 'Ethers not loaded.'; return; }
+      const msg = $('#signedMsg').value.trim();
+      const sig = $('#signedSig').value.trim();
+      if(!msg || !sig){ status.textContent = 'Missing message or signature.'; return; }
+      // Recover address
+      const recovered = ethers.utils.verifyMessage(msg, sig);
+      status.textContent = `Signature OK from ${recovered.slice(0,6)}…${recovered.slice(-4)}. Checking NFT…`;
+      // Optional: parse and check expiry/nonce inside msg here.
+
+      // On-chain check (read-only)
+      const provider = new ethers.providers.JsonRpcProvider(CHAIN_RPC);
+      let holds = false;
+      if(MODE === 'erc1155'){
+        const abi = ["function balanceOf(address account, uint256 id) view returns (uint256)"];
+        const c = new ethers.Contract(NFT_CONTRACT, abi, provider);
+        const bal = await c.balanceOf(recovered, TOKEN_ID);
+        holds = bal && bal.gt(0);
+      } else {
+        const abi = ["function balanceOf(address owner) view returns (uint256)"];
+        const c = new ethers.Contract(NFT_CONTRACT, abi, provider);
+        const bal = await c.balanceOf(recovered);
+        holds = bal && bal.gt(0);
+      }
+      if(!holds){ status.textContent = 'This address does not hold the NFT.'; return; }
+      // Success → enable Pro
+      proUnlocked = true;
+      localStorage.setItem('vibelab_pro_addr', recovered);
+      if(wmText) wmText.textContent = `Pro · ${recovered.slice(0,6)}…${recovered.slice(-4)}`;
+      $('#unlockModal').style.display='none';
+      enableProUi();
+    }catch(err){
+      console.error(err);
+      status.textContent = 'Verification failed. Check inputs and try again.';
+    }
+  }
+
+  function enableProUi(){
+    // Replace lock block with live controls summary
+    const lock = document.querySelector('.group h2 + .lock');
+    if(lock){ lock.innerHTML = `<div class="ok">✔ Pro unlocked. Animation + WebM export available in the Pro build.</div>`; }
+    // NOTE: For strong gating, load Pro code from your server after verification instead of bundling it here.
+  }
+
+  // --- Events
+  period.addEventListener('input', applyStripes);
+  thickness.addEventListener('input', applyStripes);
+  orientH.addEventListener('click', ()=>applyOrientation('h'));
+  orientV.addEventListener('click', ()=>applyOrientation('v'));
+  overlayRange.addEventListener('input', applyOverlay);
+  overlayAngle.addEventListener('input', applyOverlay);
+  fx.addEventListener('input', applyNoise);
+  fy.addEventListener('input', applyNoise);
+  scale.addEventListener('input', applyNoise);
+  oct.addEventListener('input', applyNoise);
+  seed.addEventListener('input', applyNoise);
+  paperColor.addEventListener('input', applyColors);
+  inkColor.addEventListener('input', applyColors);
+  invert.addEventListener('change', applyColors);
+  randomSeed.addEventListener('click', randomize);
+  resetBtn.addEventListener('click', resetAll);
+  downloadSvg.addEventListener('click', ()=>download('op-art.svg', serializeSvg(art)));
+  copySvg.addEventListener('click', async()=>{ try{ await navigator.clipboard.writeText(serializeSvg(art)); copySvg.textContent='Copied ✔'; setTimeout(()=>copySvg.textContent='Copy SVG',1200);}catch(e){ copySvg.textContent='Copy failed'; setTimeout(()=>copySvg.textContent='Copy SVG',1200);} });
+  unlockBtn.addEventListener('click', ()=>{ buildModal(); $('#unlockModal').style.display='grid'; });
+
+  // --- Init
+  applyStripes(); applyOverlay(); applyNoise(); applyColors();
+  const saved = localStorage.getItem('vibelab_pro_addr');
+  if(saved){ proUnlocked = true; if(wmText) wmText.textContent = `Pro · ${saved.slice(0,6)}…${saved.slice(-4)}`; enableProUi(); }
+})();
+</script>
+</body>
+</html>
