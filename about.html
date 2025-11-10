@@ -20,36 +20,58 @@
 <meta name="twitter:image" content="https://mindprint.art/og.png">
 <link rel="canonical" href="https://mindprint.art/about.html">
 <style>
-  :root{ --bg:#0b0d12; --ink:#e7e7e7; --muted:#a9b0bd; --edge:rgba(255,255,255,.08); }
-  html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace}
-  .container{ max-width:1200px; margin:0 auto; padding:18px 16px; }
-  .site-header{ position:sticky; top:0; background:rgba(11,13,18,.7); backdrop-filter:saturate(1.2) blur(8px); border-bottom:1px solid var(--edge); z-index:50; }
-  .brand{ color:#39ff14; text-decoration:none; font-weight:600; letter-spacing:.3px; text-shadow:0 0 8px rgba(57,255,20,.45); }
-  .nav a{ color:#39ff14; opacity:.95; text-decoration:none; margin-left:16px; text-shadow:0 0 6px rgba(57,255,20,.35); }
-  .nav a:hover{ opacity:1; }
-  .hero{ padding:28px 0 6px; }
-  .hero h1{ margin:0 0 8px; font-size:22px; }
-  .lead{ color:var(--muted); max-width:60ch; font-size:14px; opacity:.9 }
+  :root{ --bg:#0a0a0a; --panel:#111318; --ink:#e7e7e7; --muted:#a9b0bd; --edge:rgba(255,255,255,.08); }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{
+    background:
+      radial-gradient(1000px 600px at 20% -10%, rgba(130,226,255,.12), transparent 45%),
+      radial-gradient(800px 500px at 85% 0%, rgba(130,226,255,.06), transparent 40%),
+      repeating-linear-gradient(60deg, hsla(200, 90%, 65%, .08) 0 2px, transparent 2px 18px),
+      repeating-linear-gradient(-30deg, hsla(300, 90%, 70%, .06) 0 1px, transparent 1px 16px),
+      repeating-linear-gradient(120deg, hsla(160, 90%, 60%, .05) 0 1px, transparent 1px 14px),
+      var(--bg);
+    background-attachment: fixed;
+    color:#e7e7e7;
+    font:14px/1.6 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    text-rendering:optimizeLegibility;
+    animation:bg-drift 18s ease-in-out infinite alternate;
+  }
+  @keyframes bg-drift{
+    from{background-position:0 0, 100% 0, 0 0, 0 0, 0 0, 0 0}
+    to{background-position:0 -120px, 100% -80px, 200px 0, -180px 0, 120px 0, 0 0}
+  }
+  .wrap{max-width:1200px;margin:0 auto;padding:28px 16px}
+  header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .hdr-left{display:flex;align-items:center;gap:12px}
+  .hdr-right{margin-left:auto}
+  .brand{font-weight:700;letter-spacing:.4px;color:#39ff14;text-shadow:0 0 8px rgba(57,255,20,.45)}
+  .tag{opacity:.9;color:#39ff14;text-shadow:0 0 6px rgba(57,255,20,.35)}
+  .logo{width:36px;height:36px;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.4);object-fit:cover}
+  .hero{display:grid;gap:8px;margin:10px 0 18px 0}
   .section{ margin-top:22px; border-top:1px solid var(--edge); padding-top:18px; }
-  .site-footer{ margin-top:40px; border-top:1px solid var(--edge); color:var(--muted); font-size:12px; opacity:.6 }
-  .site-footer a{ color:var(--ink); opacity:.85; text-decoration:none; }
-  .site-footer a:hover{ opacity:1; }
-  .pill{ display:inline-block; padding:2px 8px; border:1px solid rgba(255,255,255,.12); border-radius:999px; font-size:11px; opacity:.9; background:rgba(255,255,255,.03); backdrop-filter:saturate(120%) blur(2px); }
+  footer{margin-top:22px;opacity:.6;font-size:12px;display:flex;gap:10px}
+  .pill{display:inline-block;padding:2px 8px;border:1px solid rgba(255,255,255,.12);border-radius:999px;font-size:11px;opacity:.9;background:rgba(255,255,255,.03);backdrop-filter:saturate(120%) blur(2px)}
   @supports not ((backdrop-filter: blur(2px))){ .pill{ background:rgba(255,255,255,.04) } }
 </style>
 </head>
 <body>
-<header class="site-header">
-  <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
-    <a class="brand" href="index.html">mindprint.art</a>
-    <nav class="nav"><a href="index.html">Home</a><a href="about.html">About</a></nav>
-  </div>
-</header>
+<div class="wrap">
+  <header>
+    <div class="hdr-left">
+      <img class="logo" src="logo.png" alt="mindprint.art" onerror="this.onerror=null;this.src='og.png'">
+      <div class="brand">mindprint.art</div>
+      <div class="tag">:: Generative art & tools ::</div>
+    </div>
+    <div class="hdr-right"></div>
+  </header>
 
-<main class="container">
+  <main>
   <section class="hero">
     <h1>About</h1>
-    <p class="lead">mindprint.art explores optical art, moiré systems, and unlockable creative tools for collectors.</p>
+    <p class="lead" style="margin:0">mindprint.art explores optical art, moiré systems, and unlockable creative tools for collectors.</p>
   </section>
 
   <section class="section">
@@ -70,15 +92,19 @@
     </ul>
   </section>
 
-  <section class="section">
+  <section class="section" style="margin-bottom:10px">
     <h2>Contact</h2>
     <p><a href="mailto:mindprintart@gmail.com">mindprintart@gmail.com</a></p>
   </section>
 </main>
 
-<footer class="site-footer">
-  <div class="container">© <span id="y"></span> mindprint.art <span class="pill" id="siteVersion" style="margin-left:8px" aria-live="polite">v…</span></div>
-</footer>
+  <footer>
+    <div>© <span id="y"></span> mindprint.art</div>
+    <a class="tag" href="robots.txt">robots</a>
+    <a class="tag" href="sitemap.xml">sitemap</a>
+    <span class="pill" id="siteVersion" style="margin-left:8px" aria-live="polite">v…</span>
+  </footer>
+</div>
 <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
 <script>
 (async function(){
