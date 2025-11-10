@@ -94,6 +94,9 @@
     <section class="hero">
       <h1 style="margin:0;font-size:22px">Projects</h1>
       <div class="tag">A curated set of experiments and generators. Pick one to explore.</div>
+      <div>
+        <button id="connectBtn" class="pill" type="button" aria-live="polite">Connect Wallet</button>
+      </div>
     </section>
 
     <section class="grid" aria-label="Project links">
@@ -150,5 +153,34 @@
       <a class="tag" href="sitemap.xml">sitemap</a>
     </footer>
   </div>
+  <script>
+  (function(){
+    const btn = document.getElementById('connectBtn');
+    if(!btn) return;
+    function truncate(addr){ return addr.slice(0,6) + '…' + addr.slice(-4); }
+    function setConnected(addr){
+      btn.textContent = 'Connected ' + truncate(addr);
+      btn.disabled = true;
+      btn.classList.add('connected');
+    }
+    async function connect(){
+      try{
+        if(!window.ethereum){ window.open('https://metamask.io/download','_blank'); return; }
+        const accounts = await window.ethereum.request({ method:'eth_requestAccounts' });
+        const addr = accounts && accounts[0];
+        if(addr){ localStorage.setItem('mp_addr', addr); setConnected(addr); }
+      }catch(err){ console.error('connect error', err); }
+    }
+    const saved = localStorage.getItem('mp_addr');
+    if(saved){ setConnected(saved); } else { btn.addEventListener('click', connect); }
+    if(window.ethereum && window.ethereum.on){
+      window.ethereum.on('accountsChanged', (acc)=> {
+        const addr = acc && acc[0];
+        if(addr){ localStorage.setItem('mp_addr', addr); setConnected(addr); }
+        else{ btn.textContent='Connect Wallet'; btn.disabled=false; btn.classList.remove('connected'); localStorage.removeItem('mp_addr'); }
+      });
+    }
+  })();
+  </script>
 </body>
 </html>
