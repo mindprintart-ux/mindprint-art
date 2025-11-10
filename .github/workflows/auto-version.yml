@@ -3,6 +3,8 @@ on:
   push:
     branches: [ main ]
 jobs:
+  permissions:
+    contents: write
   bump-patch:
     # Avoid recursion when this workflow pushes the version commit
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
