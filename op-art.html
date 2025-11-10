@@ -31,6 +31,9 @@
   .stage-wrap{display:grid;place-items:center;background:linear-gradient(180deg,#0b0d12,#07080b);border-radius:18px;padding:16px;box-shadow:0 20px 60px rgba(0,0,0,.5) inset, 0 0 0 1px rgba(255,255,255,.05)}
   .stage{width:min(80vmin,920px);aspect-ratio:1/1;background:#000;border-radius:16px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.5), 0 0 0 10px #000}
   .panel{background:var(--panel);border-radius:18px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.06);position:relative}
+  .nav{display:flex;gap:14px;justify-content:flex-end;margin:12px 0}
+  .nav a{color:#e7e7e7;opacity:.85;text-decoration:none}
+  .nav a:hover{opacity:1}
   h1{font-size:18px;margin:0 0 6px 0;letter-spacing:.3px}
   .sub{opacity:.75;font-size:12px;margin-bottom:12px}
   .controls{display:grid;gap:10px;max-height:80vh;overflow:auto;scrollbar-color:#2a2f3a transparent;padding-right:6px}
@@ -65,6 +68,11 @@
 </style>
 </head>
 <body>
+  <div class="nav">
+    <a href="index.html">Home</a>
+    <a href="mint.html">Mint</a>
+    <a href="about.html">About</a>
+  </div>
   <div class="app">
     <div class="stage-wrap">
       <svg id="art" class="stage" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg" aria-label="Op Art generator (Lite, unlockable)">

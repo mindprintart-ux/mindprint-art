@@ -35,13 +35,21 @@
   .btn{appearance:none;border:1px solid rgba(255,255,255,.15);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer}
   .btn:hover{border-color:rgba(255,255,255,.28)}
   .pill{display:inline-block;padding:2px 8px;border:1px solid rgba(255,255,255,.12);border-radius:999px;font-size:11px;opacity:.9;background:rgba(255,255,255,.03)}
+  .nav{display:flex;gap:14px;align-items:center;margin-left:auto}
+  .nav a{color:#e7e7e7;opacity:.85;text-decoration:none}
+  .nav a:hover{opacity:1}
 </style>
 </head>
 <body>
   <div class="wrap">
-    <header>
+    <header style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
       <a href="index.html" class="brand">mindprint.art</a>
       <span class="pill" style="margin-left:8px" id="siteVersion">v…</span>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="mint.html">Mint</a>
+        <a href="about.html">About</a>
+      </nav>
     </header>
     <section class="panel">
       <h1 style="margin:0;font-size:20px">Mint</h1>

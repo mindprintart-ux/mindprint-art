@@ -59,9 +59,17 @@
     button:hover{border-color:rgba(255,255,255,.28);box-shadow:0 6px 18px rgba(0,0,0,.35)}
     button:active{transform:translateY(1px)}
     button:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(130,226,255,.25);border-color:rgba(130,226,255,.5)}
+    .nav{display:flex;gap:14px;justify-content:flex-end;margin:12px 0 0 0;padding:0 16px}
+    .nav a{color:#e7e7e7;opacity:.85;text-decoration:none}
+    .nav a:hover{opacity:1}
   </style>
 </head>
 <body>
+  <div class="nav">
+    <a href="index.html">Home</a>
+    <a href="mint.html">Mint</a>
+    <a href="about.html">About</a>
+  </div>
   <h1>mindprint.art – Opepen Grid-Aligned Generator</h1>
   <canvas id="mindprint" width="768" height="768"></canvas>
   <br>

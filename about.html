@@ -50,6 +50,9 @@
   .brand{font-weight:700;letter-spacing:.4px;color:#39ff14;text-shadow:0 0 8px rgba(57,255,20,.45)}
   .tag{opacity:.9;color:#39ff14;text-shadow:0 0 6px rgba(57,255,20,.35)}
   .logo{width:36px;height:36px;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.4);object-fit:cover}
+  .nav{display:flex;gap:14px;align-items:center}
+  .nav a{color:#e7e7e7;opacity:.85;text-decoration:none}
+  .nav a:hover{opacity:1}
   .hero{display:grid;gap:8px;margin:10px 0 18px 0}
   .section{ margin-top:22px; border-top:1px solid var(--edge); padding-top:18px; }
   footer{margin-top:22px;opacity:.6;font-size:12px;display:flex;gap:10px}
@@ -65,7 +68,13 @@
       <div class="brand">mindprint.art</div>
       <div class="tag">:: Generative art & tools ::</div>
     </div>
-    <div class="hdr-right"></div>
+    <div class="hdr-right">
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="mint.html">Mint</a>
+        <a href="about.html">About</a>
+      </nav>
+    </div>
   </header>
 
   <main>
