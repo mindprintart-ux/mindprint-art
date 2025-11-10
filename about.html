@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="icon" href="favicon.ico">
-<meta name="theme-color" content="#0b0d12">
+<meta name="theme-color" content="#39ff14">
 <link rel="preload" href="og.png" as="image">
 <meta property="og:title" content="About — mindprint.art">
 <meta property="og:description" content="Generative projects and tools by mindprint.art.">
@@ -24,8 +24,8 @@
   html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace}
   .container{ max-width:900px; margin:0 auto; padding:18px 16px; }
   .site-header{ position:sticky; top:0; background:rgba(11,13,18,.7); backdrop-filter:saturate(1.2) blur(8px); border-bottom:1px solid var(--edge); z-index:50; }
-  .brand{ color:#fff; text-decoration:none; font-weight:600; letter-spacing:.3px; }
-  .nav a{ color:var(--ink); opacity:.9; text-decoration:none; margin-left:16px; }
+  .brand{ color:#39ff14; text-decoration:none; font-weight:600; letter-spacing:.3px; text-shadow:0 0 8px rgba(57,255,20,.45); }
+  .nav a{ color:#39ff14; opacity:.95; text-decoration:none; margin-left:16px; text-shadow:0 0 6px rgba(57,255,20,.35); }
   .nav a:hover{ opacity:1; }
   .hero{ padding:28px 0 6px; }
   .hero h1{ margin:0 0 8px; font-size:28px; }
@@ -109,7 +109,8 @@ document.getElementById('y').textContent = new Date().getFullYear();
     if(!res.ok) return;
     const v = await res.json();
     const date = (v.dateISO||'').slice(0,10);
-    el.textContent = `v${v.version} · ${v.sha} · ${date}`;
+    const buildText = v.build ? `+${v.build}` : '';
+    el.textContent = `v${v.version}${buildText} · ${v.sha} · ${date}`;
   }catch(e){}
 })();
 </script>

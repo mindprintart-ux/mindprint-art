@@ -16,7 +16,16 @@ function main() {
   const version = pkg.version || '0.0.0';
   const sha = getGitSha();
   const dateISO = new Date().toISOString();
-  const out = { version, sha, dateISO };
+  // Build number: prefer CI run number, otherwise count commits
+  let build = process.env.GITHUB_RUN_NUMBER;
+  if (!build) {
+    try {
+      build = execSync('git rev-list --count HEAD', { encoding: 'utf8' }).trim();
+    } catch {
+      build = '0';
+    }
+  }
+  const out = { version, build, sha, dateISO };
   const outPath = resolve(__dirname, '..', 'version.json');
   writeFileSync(outPath, JSON.stringify(out, null, 2) + '\n', 'utf8');
   console.log('Wrote version.json:', out);

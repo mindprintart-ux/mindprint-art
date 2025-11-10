@@ -50,8 +50,10 @@
   }
   .wrap{max-width:1200px;margin:0 auto;padding:28px 16px}
   header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
-  .brand{font-weight:700;letter-spacing:.4px;font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace}
-  .tag{opacity:.78}
+  .hdr-left{display:flex;align-items:center;gap:12px}
+  .hdr-right{margin-left:auto}
+  .brand{font-weight:700;letter-spacing:.4px;font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;color:#39ff14;text-shadow:0 0 8px rgba(57,255,20,.45)}
+  .tag{opacity:.9;color:#39ff14;text-shadow:0 0 6px rgba(57,255,20,.35)}
   .logo{width:36px;height:36px;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.4);object-fit:cover}
   .hero{display:grid;gap:8px;margin:10px 0 18px 0}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
@@ -91,17 +93,19 @@
 <body>
   <div class="wrap">
     <header>
-      <img class="logo" src="logo.png" alt="mindprint.art" onerror="this.onerror=null;this.src='og.png'">
-      <div class="brand">mindprint.art</div>
-      <div class="tag">Generative art & tools</div>
+      <div class="hdr-left">
+        <img class="logo" src="logo.png" alt="mindprint.art" onerror="this.onerror=null;this.src='og.png'">
+        <div class="brand">mindprint.art</div>
+        <div class="tag">Generative art & tools</div>
+      </div>
+      <div class="hdr-right">
+        <button id="connectBtn" class="pill hdr-connect" type="button" aria-live="polite">Connect Wallet</button>
+      </div>
     </header>
 
     <section class="hero">
       <h1 style="margin:0;font-size:22px">Projects</h1>
       <div class="tag">A curated set of experiments and generators. Pick one to explore.</div>
-      <div>
-        <button id="connectBtn" class="pill" type="button" aria-live="polite">Connect Wallet</button>
-      </div>
     </section>
 
     <section class="grid" aria-label="Project links">
@@ -179,7 +183,13 @@
       }catch(err){ console.error('connect error', err); }
     }
     const saved = localStorage.getItem('mp_addr');
-    if(saved){ setConnected(saved); } else { btn.addEventListener('click', connect); if(!window.ethereum){ btn.textContent='Install MetaMask'; } }
+    if(saved){ setConnected(saved); } else {
+      btn.addEventListener('click', connect);
+      if(!window.ethereum){
+        btn.textContent='Install MetaMask';
+        btn.onclick = function(){ window.location.href='https://metamask.io/download'; };
+      }
+    }
     if(window.ethereum && window.ethereum.on){
       window.ethereum.on('accountsChanged', (acc)=> {
         const addr = acc && acc[0];
@@ -199,7 +209,8 @@
       if(!res.ok) return;
       const v = await res.json();
       const date = (v.dateISO||'').slice(0,10);
-      el.textContent = `v${v.version} · ${v.sha} · ${date}`;
+      const buildText = v.build ? `+${v.build}` : '';
+      el.textContent = `v${v.version}${buildText} · ${v.sha} · ${date}`;
     }catch(e){}
   })();
   </script>
