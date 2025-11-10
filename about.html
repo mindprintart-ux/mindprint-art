@@ -72,7 +72,7 @@
 </main>
 
 <footer class="site-footer">
-  <div class="container">© <span id="y"></span> mindprint.art</div>
+  <div class="container">© <span id="y"></span> mindprint.art <span class="pill" id="siteVersion" style="margin-left:8px" aria-live="polite">v…</span></div>
 </footer>
 <script>
 document.getElementById('y').textContent = new Date().getFullYear();
@@ -95,6 +95,19 @@ document.getElementById('y').textContent = new Date().getFullYear();
     if(a){ localStorage.setItem('mp_addr', a); set(a); }
     else{ btn.textContent='Connect Wallet'; btn.disabled=false; localStorage.removeItem('mp_addr'); }
   });
+})();
+</script>
+<script>
+(async function(){
+  try{
+    const el = document.getElementById('siteVersion');
+    if(!el) return;
+    const res = await fetch('version.json', { cache: 'no-store' });
+    if(!res.ok) return;
+    const v = await res.json();
+    const date = (v.dateISO||'').slice(0,10);
+    el.textContent = `v${v.version} · ${v.sha} · ${date}`;
+  }catch(e){}
 })();
 </script>
 </body>

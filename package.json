@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.1",
   "scripts": {
-    "build": "echo \"no build step (static)\""
+    "build": "echo \"no build step (static)\"",
+    "postversion": "node scripts/write-version.js && git add version.json || true && git commit -m \"chore: version.json v$npm_package_version\" || true"
   }
 }

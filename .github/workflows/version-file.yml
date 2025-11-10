@@ -1,0 +1,26 @@
+name: update-version-file
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - 'version.json'
+      - '.github/workflows/version-file.yml'
+jobs:
+  write-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Write version.json
+        run: node scripts/write-version.js
+      - name: Commit version.json
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update version.json [skip ci]"
+          file_pattern: version.json
+
+

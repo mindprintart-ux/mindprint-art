@@ -151,6 +151,7 @@
       <div>© 2025 mindprint.art</div>
       <a class="tag" href="robots.txt">robots</a>
       <a class="tag" href="sitemap.xml">sitemap</a>
+      <span class="pill" id="siteVersion" aria-live="polite" title="Deployed version">v…</span>
     </footer>
   </div>
   <script>
@@ -159,20 +160,21 @@
     if(!btn) return;
     function truncate(addr){ return addr.slice(0,6) + '…' + addr.slice(-4); }
     function setConnected(addr){
+      if(!btn) return;
       btn.textContent = 'Connected ' + truncate(addr);
       btn.disabled = true;
       btn.classList.add('connected');
     }
     async function connect(){
       try{
-        if(!window.ethereum){ window.open('https://metamask.io/download','_blank'); return; }
+        if(!window.ethereum){ btn.textContent='Install MetaMask'; window.open('https://metamask.io/download','_blank'); return; }
         const accounts = await window.ethereum.request({ method:'eth_requestAccounts' });
         const addr = accounts && accounts[0];
         if(addr){ localStorage.setItem('mp_addr', addr); setConnected(addr); }
       }catch(err){ console.error('connect error', err); }
     }
     const saved = localStorage.getItem('mp_addr');
-    if(saved){ setConnected(saved); } else { btn.addEventListener('click', connect); }
+    if(saved){ setConnected(saved); } else { btn.addEventListener('click', connect); if(!window.ethereum){ btn.textContent='Install MetaMask'; } }
     if(window.ethereum && window.ethereum.on){
       window.ethereum.on('accountsChanged', (acc)=> {
         const addr = acc && acc[0];
@@ -180,6 +182,20 @@
         else{ btn.textContent='Connect Wallet'; btn.disabled=false; btn.classList.remove('connected'); localStorage.removeItem('mp_addr'); }
       });
     }
+  })();
+  </script>
+  <script>
+  // Version pill
+  (async function(){
+    try{
+      const el = document.getElementById('siteVersion');
+      if(!el) return;
+      const res = await fetch('version.json', { cache: 'no-store' });
+      if(!res.ok) return;
+      const v = await res.json();
+      const date = (v.dateISO||'').slice(0,10);
+      el.textContent = `v${v.version} · ${v.sha} · ${date}`;
+    }catch(e){}
   })();
   </script>
 </body>

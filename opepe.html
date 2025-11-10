@@ -279,7 +279,7 @@
       }catch(e){ console.error(e); }
     }
     const saved = localStorage.getItem('mp_addr');
-    if(saved) set(saved); else btn.addEventListener('click', connect);
+    if(saved) set(saved); else { btn.addEventListener('click', connect); if(!window.ethereum){ btn.textContent='Install MetaMask'; } }
     window.ethereum?.on?.('accountsChanged', (acc)=> {
       const a = acc && acc[0];
       if(a){ localStorage.setItem('mp_addr', a); set(a); }
