@@ -1,0 +1,38 @@
+name: auto-version-patch-on-push
+on:
+  push:
+    branches: [ main ]
+jobs:
+  bump-patch:
+    # Avoid recursion when this workflow pushes the version commit
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Configure git user
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Bump version per 199-cap rule
+        run: |
+          node scripts/bump-version.js
+          NEW_VER=$(node -p "require('./package.json').version")
+          git add package.json
+          git commit -m "chore: version ${NEW_VER} [skip ci]"
+      - name: Write version.json and amend into version commit
+        run: |
+          node scripts/write-version.js
+          git add version.json
+          git commit --amend --no-edit
+      - name: Create tag and push
+        run: |
+          NEW_VER=$(node -p "require('./package.json').version")
+          git tag -f "v${NEW_VER}"
+          git push --follow-tags
+
+
