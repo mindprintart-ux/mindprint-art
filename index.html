@@ -18,21 +18,70 @@
 <style>
   :root{
     --bg:#0a0a0a; --panel:#111318; --ink:#000000; --paper:#ffffff; --accent:#82e2ff;
+    --radius:14px;
   }
   *{box-sizing:border-box}
-  html,body{height:100%;margin:0;background:var(--bg);color:#e7e7e7;font:14px/1.5 system-ui,Segoe UI,Roboto,Inter,Arial}
+  html,body{height:100%;margin:0}
+  body{
+    background:
+      radial-gradient(1000px 600px at 20% -10%, rgba(130,226,255,.12), transparent 45%),
+      radial-gradient(800px 500px at 85% 0%, rgba(130,226,255,.06), transparent 40%),
+      repeating-linear-gradient(60deg, hsla(200, 90%, 65%, .08) 0 2px, transparent 2px 18px),
+      repeating-linear-gradient(-30deg, hsla(300, 90%, 70%, .06) 0 1px, transparent 1px 16px),
+      repeating-linear-gradient(120deg, hsla(160, 90%, 60%, .05) 0 1px, transparent 1px 14px),
+      var(--bg);
+    background-attachment: fixed;
+    color:#e7e7e7;
+    font:14px/1.55 system-ui,Segoe UI,Roboto,Inter,Arial;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    text-rendering:optimizeLegibility;
+    animation:bg-drift 18s ease-in-out infinite alternate;
+  }
+  @media (prefers-reduced-motion: reduce){
+    body{animation:none}
+  }
+  @keyframes bg-drift{
+    from{background-position:0 0, 100% 0, 0 0, 0 0, 0 0, 0 0}
+    to{background-position:0 -120px, 100% -80px, 200px 0, -180px 0, 120px 0, 0 0}
+  }
   .wrap{max-width:1200px;margin:0 auto;padding:28px 16px}
   header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-  .brand{font-weight:600;letter-spacing:.3px}
-  .tag{opacity:.75}
+  .brand{font-weight:700;letter-spacing:.4px}
+  .tag{opacity:.78}
   .hero{display:grid;gap:8px;margin:10px 0 18px 0}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
-  .card{display:flex;flex-direction:column;gap:8px;background:var(--panel);border-radius:14px;padding:14px;text-decoration:none;color:#e7e7e7;border:1px solid rgba(255,255,255,.06);box-shadow:0 8px 24px rgba(0,0,0,.35)}
-  .card:hover{border-color:rgba(130,226,255,.35);box-shadow:0 10px 32px rgba(0,0,0,.45)}
-  .card h3{margin:0;font-size:16px}
-  .card p{margin:0;opacity:.8;font-size:13px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+  .card{
+    display:flex;flex-direction:column;gap:8px;
+    background:linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0)) , var(--panel);
+    border-radius:14px;padding:14px;text-decoration:none;color:#e7e7e7;
+    border:1px solid rgba(255,255,255,.06);
+    box-shadow:0 8px 24px rgba(0,0,0,.35);
+    transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease, background .25s ease;
+    outline:none;
+  }
+  .card:hover{
+    border-color:rgba(130,226,255,.35);
+    box-shadow:0 14px 40px rgba(0,0,0,.55);
+    transform:translateY(-2px);
+    background:linear-gradient(180deg, rgba(130,226,255,.05), rgba(255,255,255,0)) , var(--panel);
+  }
+  .card:focus-visible{
+    border-color:rgba(130,226,255,.6);
+    box-shadow:0 0 0 3px rgba(130,226,255,.2), 0 14px 40px rgba(0,0,0,.55);
+  }
+  .card h3{margin:0;font-size:16px;letter-spacing:.2px}
+  .card p{margin:0;opacity:.82;font-size:13px}
   footer{margin-top:22px;opacity:.6;font-size:12px;display:flex;gap:10px}
-  .pill{display:inline-block;padding:2px 8px;border:1px solid rgba(255,255,255,.12);border-radius:999px;font-size:11px;opacity:.85}
+  .pill{
+    display:inline-block;padding:2px 8px;border:1px solid rgba(255,255,255,.12);
+    border-radius:999px;font-size:11px;opacity:.9;
+    background:rgba(255,255,255,.03);
+    backdrop-filter:saturate(120%) blur(2px);
+  }
+  @supports not ((backdrop-filter: blur(2px))){
+    .pill{background:rgba(255,255,255,.04)}
+  }
 </style>
 </head>
 <body>

@@ -4,10 +4,58 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mindprint Filler Engine</title>
+  <link rel="icon" href="favicon.ico">
+  <meta name="theme-color" content="#0b0d12">
+  <meta property="og:title" content="Experimental Pepe — mindprint.art">
+  <meta property="og:description" content="Work‑in‑progress experimental riffs.">
+  <meta property="og:image" content="https://mindprint.art/og.png">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mindprint.art/xpepe.html">
+  <meta property="og:site_name" content="mindprint.art">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://mindprint.art/og.png">
+  <link rel="canonical" href="https://mindprint.art/xpepe.html">
   <style>
-    body { background: #000; color: #fff; font-family: sans-serif; text-align: center; }
-    canvas { background: #111; margin-top: 1em; border-radius: 12px; }
-    button { margin: 0.5em; padding: 8px 16px; font-size: 16px; }
+    :root{ --bg:#0a0a0a; --panel:#111318; --ink:#000; --paper:#fff; --accent:#82e2ff; }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0}
+    body{
+      background:
+        radial-gradient(1000px 600px at 20% -10%, rgba(130,226,255,.12), transparent 45%),
+        radial-gradient(800px 500px at 85% 0%, rgba(130,226,255,.06), transparent 40%),
+        repeating-linear-gradient(60deg, hsla(200, 90%, 65%, .08) 0 2px, transparent 2px 18px),
+        repeating-linear-gradient(-30deg, hsla(300, 90%, 70%, .06) 0 1px, transparent 1px 16px),
+        repeating-linear-gradient(120deg, hsla(160, 90%, 60%, .05) 0 1px, transparent 1px 14px),
+        var(--bg);
+      background-attachment: fixed;
+      color:#e7e7e7;
+      font:14px/1.55 system-ui,Segoe UI,Roboto,Inter,Arial;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      text-rendering:optimizeLegibility;
+      text-align:center;
+      animation:bg-drift 18s ease-in-out infinite alternate;
+      padding:16px;
+    }
+    @media (prefers-reduced-motion: reduce){ body{animation:none} }
+    @keyframes bg-drift{
+      from{background-position:0 0, 100% 0, 0 0, 0 0, 0 0, 0 0}
+      to{background-position:0 -120px, 100% -80px, 200px 0, -180px 0, 120px 0, 0 0}
+    }
+    h1{margin:0 0 8px 0;font-size:18px;letter-spacing:.2px}
+    canvas{
+      background:#111;margin-top:10px;border-radius:14px;
+      box-shadow:0 10px 32px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.06);
+    }
+    button{
+      appearance:none;margin:.5em;padding:8px 14px;font-size:14px;
+      color:#fff;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+      border:1px solid rgba(255,255,255,.15);border-radius:10px;cursor:pointer;
+      transition:transform .15s ease,border-color .15s ease,box-shadow .15s ease,background .15s ease;
+    }
+    button:hover{border-color:rgba(255,255,255,.28);box-shadow:0 6px 18px rgba(0,0,0,.35)}
+    button:active{transform:translateY(1px)}
+    button:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(130,226,255,.25);border-color:rgba(130,226,255,.5)}
   </style>
 </head>
 <body>
