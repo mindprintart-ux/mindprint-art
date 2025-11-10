@@ -91,9 +91,7 @@
     <aside class="panel">
       <h1>Op Art Vibe Lab — Lite</h1>
       <div class="sub">Static generator (SVG export). <span class="badge">Pro locked</span></div>
-      <div style="margin:6px 0 10px">
-        <button class="btn" id="connectBtn" type="button" aria-live="polite">Connect Wallet</button>
-      </div>
+      <!-- Wallet connect removed -->
       <div class="controls">
         <div class="group">
           <h2>Stripes</h2>
@@ -351,30 +349,6 @@
   if(saved){ proUnlocked = true; if(wmText) wmText.textContent = `Pro · ${saved.slice(0,6)}…${saved.slice(-4)}`; enableProUi(); }
 })();
 </script>
-<script>
-(function(){
-  const btn = document.getElementById('connectBtn');
-  if(!btn) return;
-  function trunc(a){ return a.slice(0,6)+'…'+a.slice(-4); }
-  function set(addr){ btn.textContent='Connected '+trunc(addr); btn.disabled=true; }
-  async function connect(){
-    try{
-      if(!window.ethereum){ window.open('https://metamask.io/download','_blank'); return; }
-      const [addr] = await window.ethereum.request({ method:'eth_requestAccounts' });
-      if(addr){ localStorage.setItem('mp_addr', addr); set(addr); }
-    }catch(e){ console.error(e); }
-  }
-  const saved = localStorage.getItem('mp_addr');
-  if(saved) set(saved); else {
-    btn.addEventListener('click', connect);
-    if(!window.ethereum){ btn.textContent='Install MetaMask'; btn.onclick = function(){ window.location.href='https://metamask.io/download'; }; }
-  }
-  window.ethereum?.on?.('accountsChanged', (acc)=> {
-    const a = acc && acc[0];
-    if(a){ localStorage.setItem('mp_addr', a); set(a); }
-    else{ btn.textContent='Connect Wallet'; btn.disabled=false; localStorage.removeItem('mp_addr'); }
-  });
-})();
-</script>
+<!-- Wallet connect code removed -->
 </body>
 </html>

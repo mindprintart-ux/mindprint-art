@@ -67,7 +67,7 @@
 </head>
 <body>
   <h1>mindprint.art – Opepen Grid-Aligned Generator</h1>
-  <button id="connectBtn" class="btn" type="button" aria-live="polite">Connect Wallet</button>
+  <!-- Wallet connect removed -->
   <canvas id="mindprint" width="768" height="768"></canvas>
   <br>
   <button onclick="generateArt()">🔁 Regenerate</button>
@@ -268,30 +268,6 @@
 
     generateArt();
   </script>
-  <script>
-  (function(){
-    const btn = document.getElementById('connectBtn');
-    if(!btn) return;
-    function truncate(a){ return a.slice(0,6)+'…'+a.slice(-4); }
-    function set(addr){ btn.textContent='Connected '+truncate(addr); btn.disabled=true; }
-    async function connect(){
-      try{
-        if(!window.ethereum){ window.open('https://metamask.io/download','_blank'); return; }
-        const [addr] = await window.ethereum.request({ method:'eth_requestAccounts' });
-        if(addr){ localStorage.setItem('mp_addr', addr); set(addr); }
-      }catch(e){ console.error(e); }
-    }
-    const saved = localStorage.getItem('mp_addr');
-    if(saved) set(saved); else {
-      btn.addEventListener('click', connect);
-      if(!window.ethereum){ btn.textContent='Install MetaMask'; btn.onclick = function(){ window.location.href='https://metamask.io/download'; }; }
-    }
-    window.ethereum?.on?.('accountsChanged', (acc)=> {
-      const a = acc && acc[0];
-      if(a){ localStorage.setItem('mp_addr', a); set(a); }
-      else{ btn.textContent='Connect Wallet'; btn.disabled=false; localStorage.removeItem('mp_addr'); }
-    });
-  })();
-  </script>
+  <!-- Wallet connect code removed -->
 </body>
 </html>

@@ -98,9 +98,7 @@
         <div class="brand">mindprint.art</div>
         <div class="tag">:: Generative art & tools ::</div>
       </div>
-      <div class="hdr-right">
-        <button id="connectBtn" class="pill hdr-connect" type="button" aria-live="polite">Connect Wallet</button>
-      </div>
+      <div class="hdr-right"></div>
     </header>
 
     <section class="hero">
@@ -163,42 +161,7 @@
       <span class="pill" id="siteVersion" aria-live="polite" title="Deployed version">v…</span>
     </footer>
   </div>
-  <script>
-  (function(){
-    const btn = document.getElementById('connectBtn');
-    if(!btn) return;
-    function truncate(addr){ return addr.slice(0,6) + '…' + addr.slice(-4); }
-    function setConnected(addr){
-      if(!btn) return;
-      btn.textContent = 'Connected ' + truncate(addr);
-      btn.disabled = true;
-      btn.classList.add('connected');
-    }
-    async function connect(){
-      try{
-        if(!window.ethereum){ btn.textContent='Install MetaMask'; window.open('https://metamask.io/download','_blank'); return; }
-        const accounts = await window.ethereum.request({ method:'eth_requestAccounts' });
-        const addr = accounts && accounts[0];
-        if(addr){ localStorage.setItem('mp_addr', addr); setConnected(addr); }
-      }catch(err){ console.error('connect error', err); }
-    }
-    const saved = localStorage.getItem('mp_addr');
-    if(saved){ setConnected(saved); } else {
-      btn.addEventListener('click', connect);
-      if(!window.ethereum){
-        btn.textContent='Install MetaMask';
-        btn.onclick = function(){ window.location.href='https://metamask.io/download'; };
-      }
-    }
-    if(window.ethereum && window.ethereum.on){
-      window.ethereum.on('accountsChanged', (acc)=> {
-        const addr = acc && acc[0];
-        if(addr){ localStorage.setItem('mp_addr', addr); setConnected(addr); }
-        else{ btn.textContent='Connect Wallet'; btn.disabled=false; btn.classList.remove('connected'); localStorage.removeItem('mp_addr'); }
-      });
-    }
-  })();
-  </script>
+  <!-- Wallet connect code removed -->
   <script>
   // Version pill
   (async function(){

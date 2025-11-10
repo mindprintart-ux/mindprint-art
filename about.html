@@ -42,7 +42,7 @@
 <header class="site-header">
   <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
     <a class="brand" href="index.html">mindprint.art</a>
-    <nav class="nav"><a href="index.html">Home</a><a href="about.html">About</a><button id="connectBtn" class="pill" type="button" style="margin-left:16px">Connect Wallet</button></nav>
+    <nav class="nav"><a href="index.html">Home</a><a href="about.html">About</a></nav>
   </div>
 </header>
 
@@ -79,29 +79,7 @@
 <footer class="site-footer">
   <div class="container">© <span id="y"></span> mindprint.art <span class="pill" id="siteVersion" style="margin-left:8px" aria-live="polite">v…</span></div>
 </footer>
-<script>
-document.getElementById('y').textContent = new Date().getFullYear();
-(function(){
-  const btn = document.getElementById('connectBtn');
-  if(!btn) return;
-  function trunc(a){ return a.slice(0,6)+'…'+a.slice(-4); }
-  function set(addr){ btn.textContent='Connected '+trunc(addr); btn.disabled=true; }
-  async function connect(){
-    try{
-      if(!window.ethereum){ window.open('https://metamask.io/download','_blank'); return; }
-      const [addr] = await window.ethereum.request({ method:'eth_requestAccounts' });
-      if(addr){ localStorage.setItem('mp_addr', addr); set(addr); }
-    }catch(e){ console.error(e); }
-  }
-  const saved = localStorage.getItem('mp_addr');
-  if(saved) set(saved); else { btn.addEventListener('click', connect); if(!window.ethereum){ btn.textContent='Install MetaMask'; } }
-  window.ethereum?.on?.('accountsChanged', (acc)=> {
-    const a = acc && acc[0];
-    if(a){ localStorage.setItem('mp_addr', a); set(a); }
-    else{ btn.textContent='Connect Wallet'; btn.disabled=false; localStorage.removeItem('mp_addr'); }
-  });
-})();
-</script>
+<script>document.getElementById('y').textContent = new Date().getFullYear();</script>
 <script>
 (async function(){
   try{

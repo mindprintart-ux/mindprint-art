@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mint — mindprint.art</title>
+<link rel="icon" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#0b0d12">
+<style>
+  :root{ --bg:#0a0a0a; --panel:#111318; --accent:#39ff14; }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{
+    background:
+      radial-gradient(1000px 600px at 20% -10%, rgba(130,226,255,.12), transparent 45%),
+      radial-gradient(800px 500px at 85% 0%, rgba(130,226,255,.06), transparent 40%),
+      repeating-linear-gradient(60deg, hsla(200, 90%, 65%, .08) 0 2px, transparent 2px 18px),
+      repeating-linear-gradient(-30deg, hsla(300, 90%, 70%, .06) 0 1px, transparent 1px 16px),
+      repeating-linear-gradient(120deg, hsla(160, 90%, 60%, .05) 0 1px, transparent 1px 14px),
+      var(--bg);
+    background-attachment:fixed;
+    color:#e7e7e7;
+    font:14px/1.6 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    animation:bg-drift 18s ease-in-out infinite alternate;
+  }
+  @keyframes bg-drift{ from{background-position:0 0,100% 0,0 0,0 0,0 0,0 0} to{background-position:0 -120px,100% -80px,200px 0,-180px 0,120px 0,0 0} }
+  .wrap{max-width:900px;margin:0 auto;padding:28px 16px}
+  header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .brand{font-weight:700;color:var(--accent);text-shadow:0 0 8px rgba(57,255,20,.45)}
+  .panel{background:var(--panel);border-radius:14px;padding:16px;border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 24px rgba(0,0,0,.35);display:grid;gap:12px}
+  .btn{appearance:none;border:1px solid rgba(255,255,255,.15);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));color:#fff;padding:10px 14px;border-radius:10px;cursor:pointer}
+  .btn:hover{border-color:rgba(255,255,255,.28)}
+  .pill{display:inline-block;padding:2px 8px;border:1px solid rgba(255,255,255,.12);border-radius:999px;font-size:11px;opacity:.9;background:rgba(255,255,255,.03)}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a href="index.html" class="brand">mindprint.art</a>
+      <span class="pill" style="margin-left:8px" id="siteVersion">v…</span>
+    </header>
+    <section class="panel">
+      <h1 style="margin:0;font-size:20px">Mint</h1>
+      <p style="opacity:.9">Mint an NFT directly from this page. Choose a method below.</p>
+      <div style="display:grid;gap:10px">
+        <div style="display:grid;gap:6px">
+          <strong>Credit card (managed wallet)</strong>
+          <div id="crossmint-slot" class="panel" style="padding:12px">
+            <div style="opacity:.8;font-size:13px">To enable, configure Crossmint/Paper and embed their checkout widget here.</div>
+            <button class="btn" disabled>Buy with card (configure first)</button>
+          </div>
+        </div>
+        <div style="display:grid;gap:6px">
+          <strong>Web3 wallet (multi-wallet)</strong>
+          <div id="web3-slot" class="panel" style="padding:12px">
+            <div style="opacity:.8;font-size:13px">To enable, configure Web3Modal (WalletConnect Project ID) and add mint() with your contract ABI.</div>
+            <button class="btn" disabled>Connect & Mint (configure first)</button>
+          </div>
+        </div>
+      </div>
+      <div style="opacity:.75;font-size:12px">Need help integrating? See README notes or ask me to wire Crossmint/Web3Modal now.</div>
+    </section>
+  </div>
+  <script>
+  (async function(){
+    try{
+      const el = document.getElementById('siteVersion');
+      if(!el) return;
+      const res = await fetch('version.json?ts=' + Date.now(), { cache: 'no-store' });
+      if(!res.ok) return;
+      const v = await res.json();
+      const iso = v.dateISO || '';
+      const date = iso.slice(0,10);
+      const time = iso.slice(11,19) ? iso.slice(11,19) + 'Z' : '';
+      const buildText = v.build ? `.${v.build}` : '';
+      el.textContent = `v${v.version}${buildText} · ${v.sha} · ${date} ${time}`.trim();
+    }catch(e){}
+  })();
+  </script>
+</body>
+</html>
+
+
