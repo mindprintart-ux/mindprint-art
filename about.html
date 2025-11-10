@@ -22,18 +22,20 @@
 <style>
   :root{ --bg:#0b0d12; --ink:#e7e7e7; --muted:#a9b0bd; --edge:rgba(255,255,255,.08); }
   html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace}
-  .container{ max-width:900px; margin:0 auto; padding:18px 16px; }
+  .container{ max-width:1200px; margin:0 auto; padding:18px 16px; }
   .site-header{ position:sticky; top:0; background:rgba(11,13,18,.7); backdrop-filter:saturate(1.2) blur(8px); border-bottom:1px solid var(--edge); z-index:50; }
   .brand{ color:#39ff14; text-decoration:none; font-weight:600; letter-spacing:.3px; text-shadow:0 0 8px rgba(57,255,20,.45); }
   .nav a{ color:#39ff14; opacity:.95; text-decoration:none; margin-left:16px; text-shadow:0 0 6px rgba(57,255,20,.35); }
   .nav a:hover{ opacity:1; }
   .hero{ padding:28px 0 6px; }
-  .hero h1{ margin:0 0 8px; font-size:28px; }
-  .lead{ color:var(--muted); max-width:60ch; }
+  .hero h1{ margin:0 0 8px; font-size:22px; }
+  .lead{ color:var(--muted); max-width:60ch; font-size:14px; opacity:.9 }
   .section{ margin-top:22px; border-top:1px solid var(--edge); padding-top:18px; }
-  .site-footer{ margin-top:40px; border-top:1px solid var(--edge); color:var(--muted); }
+  .site-footer{ margin-top:40px; border-top:1px solid var(--edge); color:var(--muted); font-size:12px; opacity:.6 }
   .site-footer a{ color:var(--ink); opacity:.85; text-decoration:none; }
   .site-footer a:hover{ opacity:1; }
+  .pill{ display:inline-block; padding:2px 8px; border:1px solid rgba(255,255,255,.12); border-radius:999px; font-size:11px; opacity:.9; background:rgba(255,255,255,.03); backdrop-filter:saturate(120%) blur(2px); }
+  @supports not ((backdrop-filter: blur(2px))){ .pill{ background:rgba(255,255,255,.04) } }
 </style>
 </head>
 <body>
