@@ -5,6 +5,9 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="theme-color" content="#0b0d12">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <meta property="og:title" content="mindprint.art">
 <meta property="og:description" content="Generative projects and tools by mindprint.art.">
 <meta property="og:image" content="https://mindprint.art/og.png">
@@ -32,7 +35,7 @@
       var(--bg);
     background-attachment: fixed;
     color:#e7e7e7;
-    font:14px/1.55 system-ui,Segoe UI,Roboto,Inter,Arial;
+    font:14px/1.6 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
     -webkit-font-smoothing:antialiased;
     -moz-osx-font-smoothing:grayscale;
     text-rendering:optimizeLegibility;
@@ -46,9 +49,10 @@
     to{background-position:0 -120px, 100% -80px, 200px 0, -180px 0, 120px 0, 0 0}
   }
   .wrap{max-width:1200px;margin:0 auto;padding:28px 16px}
-  header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-  .brand{font-weight:700;letter-spacing:.4px}
+  header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .brand{font-weight:700;letter-spacing:.4px;font-family:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace}
   .tag{opacity:.78}
+  .logo{width:36px;height:36px;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.4);object-fit:cover}
   .hero{display:grid;gap:8px;margin:10px 0 18px 0}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
   .card{
@@ -87,8 +91,9 @@
 <body>
   <div class="wrap">
     <header>
+      <img class="logo" src="logo.png" alt="mindprint.art" onerror="this.onerror=null;this.src='og.png'">
       <div class="brand">mindprint.art</div>
-      <nav class="tag">Generative art & tools</nav>
+      <div class="tag">Generative art & tools</div>
     </header>
 
     <section class="hero">

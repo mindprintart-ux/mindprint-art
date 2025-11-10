@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
 <link rel="icon" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0b0d12">
 
@@ -23,7 +26,7 @@
     --bg:#0a0a0a; --panel:#111318; --ink:#000000; --paper:#ffffff; --accent:#82e2ff;
   }
   *{box-sizing:border-box}
-  html,body{height:100%;margin:0;background:var(--bg);color:#e7e7e7;font:14px/1.45 system-ui,Segoe UI,Roboto,Inter,Arial}
+  html,body{height:100%;margin:0;background:var(--bg);color:#e7e7e7;font:14px/1.6 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace}
   .app{display:grid;grid-template-columns:1fr 360px;gap:18px;max-width:1400px;margin:24px auto;padding:12px}
   .stage-wrap{display:grid;place-items:center;background:linear-gradient(180deg,#0b0d12,#07080b);border-radius:18px;padding:16px;box-shadow:0 20px 60px rgba(0,0,0,.5) inset, 0 0 0 1px rgba(255,255,255,.05)}
   .stage{width:min(80vmin,920px);aspect-ratio:1/1;background:#000;border-radius:16px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.5), 0 0 0 10px #000}

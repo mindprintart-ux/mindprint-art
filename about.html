@@ -4,6 +4,9 @@
 <meta charset="utf-8">
 <title>About — mindprint.art</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <link rel="icon" href="favicon.ico">
 <meta name="theme-color" content="#0b0d12">
 <link rel="preload" href="og.png" as="image">
@@ -18,7 +21,7 @@
 <link rel="canonical" href="https://mindprint.art/about.html">
 <style>
   :root{ --bg:#0b0d12; --ink:#e7e7e7; --muted:#a9b0bd; --edge:rgba(255,255,255,.08); }
-  html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,Segoe UI,Inter,Arial}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace}
   .container{ max-width:900px; margin:0 auto; padding:18px 16px; }
   .site-header{ position:sticky; top:0; background:rgba(11,13,18,.7); backdrop-filter:saturate(1.2) blur(8px); border-bottom:1px solid var(--edge); z-index:50; }
   .brand{ color:#fff; text-decoration:none; font-weight:600; letter-spacing:.3px; }
@@ -89,7 +92,7 @@ document.getElementById('y').textContent = new Date().getFullYear();
     }catch(e){ console.error(e); }
   }
   const saved = localStorage.getItem('mp_addr');
-  if(saved) set(saved); else btn.addEventListener('click', connect);
+  if(saved) set(saved); else { btn.addEventListener('click', connect); if(!window.ethereum){ btn.textContent='Install MetaMask'; } }
   window.ethereum?.on?.('accountsChanged', (acc)=> {
     const a = acc && acc[0];
     if(a){ localStorage.setItem('mp_addr', a); set(a); }
