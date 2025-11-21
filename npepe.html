@@ -81,7 +81,7 @@
 
   <script>
     const canvas = document.getElementById("mindprint");
-    const ctx = canvas.getContext("2d");
+    let ctx = canvas.getContext("2d");
     const unit = 96;
 
     function clearCanvas() {
@@ -235,17 +235,16 @@
     }
 
     function drawBaseOpepenOnContext(customCtx) {
-      const u = 96;
-      const traits = [
-        traitFunctions[Math.floor(Math.random() * traitFunctions.length)],
-        traitFunctions[Math.floor(Math.random() * traitFunctions.length)],
-        traitFunctions[Math.floor(Math.random() * traitFunctions.length)],
-        traitFunctions[Math.floor(Math.random() * traitFunctions.length)]
-      ];
-      traits[0](customCtx, u * 2, u * 1, u * 2, u * 2);
-      traits[1](customCtx, u * 4, u * 1, u * 2, u * 2);
-      traits[2](customCtx, u * 2, u * 3, u * 4, u * 2);
-      traits[3](customCtx, u * 2, u * 6, u * 4, u);
+      const prevCtx = ctx;
+      try {
+        ctx = customCtx;
+        // clear in logical (unscaled) space
+        ctx.clearRect(0, 0, 768, 768);
+        // re-use the same drawing pipeline against the swapped ctx
+        drawBaseOpepen();
+      } finally {
+        ctx = prevCtx;
+      }
     }
 
     function downloadSVG() {

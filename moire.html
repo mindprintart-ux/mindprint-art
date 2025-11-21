@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Moiré Flow — mindprint.art</title>
+<link rel="icon" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --bg:#0a0a0a; --panel:#111318; --accent:#39ff14; }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{
+    background:
+      radial-gradient(1000px 600px at 20% -10%, rgba(130,226,255,.12), transparent 45%),
+      radial-gradient(800px 500px at 85% 0%, rgba(130,226,255,.06), transparent 40%),
+      repeating-linear-gradient(60deg, hsla(200, 90%, 65%, .08) 0 2px, transparent 2px 18px),
+      repeating-linear-gradient(-30deg, hsla(300, 90%, 70%, .06) 0 1px, transparent 1px 16px),
+      repeating-linear-gradient(120deg, hsla(160, 90%, 60%, .05) 0 1px, transparent 1px 14px),
+      var(--bg);
+    background-attachment: fixed;
+    color:#e7e7e7;
+    font:14px/1.6 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    animation:bg-drift 18s ease-in-out infinite alternate;
+  }
+  @keyframes bg-drift{ from{background-position:0 0, 100% 0, 0 0, 0 0, 0 0, 0 0} to{background-position:0 -120px, 100% -80px, 200px 0, -180px 0, 120px 0, 0 0} }
+  .wrap{max-width:1200px;margin:0 auto;padding:28px 16px}
+  header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .brand{font-weight:700;color:var(--accent);text-shadow:0 0 8px rgba(57,255,20,.45)}
+  .nav{display:flex;gap:14px;align-items:center;margin-left:auto}
+  .nav a{color:#e7e7e7;opacity:.85;text-decoration:none}
+  .nav a:hover{opacity:1}
+  .stage-wrap{display:grid;place-items:center;background:linear-gradient(180deg,#0b0d12,#07080b);border-radius:18px;padding:16px;box-shadow:0 20px 60px rgba(0,0,0,.5) inset, 0 0 0 1px rgba(255,255,255,.05)}
+  .stage{width:min(80vmin,920px);aspect-ratio:1/1;background:#000;border-radius:16px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.5), 0 0 0 10px #000}
+  .panel{background:var(--panel);border-radius:18px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,.35), 0 0 0 1px rgba(255,255,255,.06)}
+  .controls{display:grid;gap:10px}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+  .val{font-variant-numeric:tabular-nums;opacity:.8}
+  .btn{appearance:none;border:1px solid rgba(255,255,255,.15);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));color:#fff;padding:8px 10px;border-radius:10px;cursor:pointer}
+  .btn:hover{border-color:rgba(255,255,255,.28)}
+  #colorOverlay{mix-blend-mode:screen}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">mindprint.art</div>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="mint.html">Mint</a>
+        <a href="about.html">About</a>
+      </nav>
+    </header>
+
+    <div class="stage-wrap">
+      <svg id="art" class="stage" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg" aria-label="Moiré Flow">
+        <defs>
+          <pattern id="lines" patternUnits="userSpaceOnUse" width="12" height="12">
+            <rect id="paper1" width="12" height="12" fill="#ffffff"/>
+            <rect id="ink1" y="0" width="12" height="6" fill="#000000"/>
+          </pattern>
+          <pattern id="lines2" patternUnits="userSpaceOnUse" width="12" height="12" patternTransform="rotate(2)">
+            <rect id="paper2" width="12" height="12" fill="#ffffff"/>
+            <rect id="ink2" y="0" width="12" height="6" fill="#000000"/>
+          </pattern>
+          <filter id="warp" x="-20%" y="-20%" width="140%" height="140%">
+            <feTurbulence id="noise" type="fractalNoise" baseFrequency="0.008 0.008" numOctaves="2" seed="2" result="n"/>
+            <feDisplacementMap id="disp" in="SourceGraphic" in2="n" scale="35" xChannelSelector="R" yChannelSelector="G"/>
+          </filter>
+          <linearGradient id="hue" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ff2a6d"/>
+            <stop offset="50%" stop-color="#39ff14"/>
+            <stop offset="100%" stop-color="#2ad4ff"/>
+          </linearGradient>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#lines)" filter="url(#warp)"/>
+        <rect id="overlayField" width="100%" height="100%" fill="url(#lines2)" opacity="0.35"/>
+        <rect id="colorOverlay" width="100%" height="100%" fill="url(#hue)" opacity="0"/>
+      </svg>
+    </div>
+
+    <div class="panel" style="margin-top:14px">
+      <div class="controls">
+        <div class="grid2">
+          <div>
+            <div class="row"><label>Stripe period (px)</label><output id="periodVal" class="val">12</output></div>
+            <input id="period" type="range" min="4" max="80" value="12" step="1" />
+          </div>
+          <div>
+            <div class="row"><label>Line thickness (px)</label><output id="thickVal" class="val">6</output></div>
+            <input id="thickness" type="range" min="1" max="50" value="6" step="1" />
+          </div>
+          <div>
+            <div class="row"><label>Overlay angle (°)</label><output id="angVal" class="val">2</output></div>
+            <input id="angle" type="range" min="-15" max="15" value="2" step="0.1" />
+          </div>
+          <div>
+            <div class="row"><label>Overlay opacity (%)</label><output id="ovVal" class="val">35</output></div>
+            <input id="overlay" type="range" min="0" max="100" value="35" step="1" />
+          </div>
+          <div>
+            <div class="row"><label>Warp scale</label><output id="scaleVal" class="val">35</output></div>
+            <input id="scale" type="range" min="0" max="120" value="35" step="1" />
+          </div>
+          <div>
+            <div class="row"><label>Noise freq X</label><output id="fxVal" class="val">0.008</output></div>
+            <input id="fx" type="range" min="0.001" max="0.05" value="0.008" step="0.001" />
+          </div>
+          <div>
+            <div class="row"><label>Noise freq Y</label><output id="fyVal" class="val">0.008</output></div>
+            <input id="fy" type="range" min="0.001" max="0.05" value="0.008" step="0.001" />
+          </div>
+          <div>
+            <div class="row"><label>Color overlay (%)</label><output id="colVal" class="val">0</output></div>
+            <input id="colorOp" type="range" min="0" max="100" value="0" step="1" />
+          </div>
+          <div>
+            <div class="row"><label>Anim amount (%)</label><output id="animAmtVal" class="val">35</output></div>
+            <input id="animAmt" type="range" min="0" max="100" value="35" step="1" />
+          </div>
+          <div>
+            <div class="row"><label>Anim speed (×)</label><output id="animSpdVal" class="val">1.00</output></div>
+            <input id="animSpd" type="range" min="0" max="2" value="1" step="0.05" />
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button id="randomSeed" class="btn">🎲 Randomize</button>
+          <button id="play" class="btn">▶ Play</button>
+          <button id="pause" class="btn">⏸ Pause</button>
+          <button id="exportSvg" class="btn">⬇ Export SVG</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="moire.js" defer></script>
+</body>
+</html>
+
+

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Perlin Flow — mindprint.art</title>
+<link rel="icon" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{ --bg:#0a0a0a; --panel:#111318; --accent:#39ff14; }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{
+    background:
+      radial-gradient(1000px 600px at 20% -10%, rgba(130,226,255,.12), transparent 45%),
+      radial-gradient(800px 500px at 85% 0%, rgba(130,226,255,.06), transparent 40%),
+      repeating-linear-gradient(60deg, hsla(200, 90%, 65%, .08) 0 2px, transparent 2px 18px),
+      repeating-linear-gradient(-30deg, hsla(300, 90%, 70%, .06) 0 1px, transparent 1px 16px),
+      repeating-linear-gradient(120deg, hsla(160, 90%, 60%, .05) 0 1px, transparent 1px 14px),
+      var(--bg);
+    background-attachment:fixed;
+    color:#e7e7e7;
+    font:14px/1.6 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    animation:bg-drift 18s ease-in-out infinite alternate;
+  }
+  @keyframes bg-drift{ from{background-position:0 0,100% 0,0 0,0 0,0 0,0 0} to{background-position:0 -120px,100% -80px,200px 0,-180px 0,120px 0,0 0} }
+  .wrap{max-width:1200px;margin:0 auto;padding:28px 16px}
+  header{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .brand{font-weight:700;color:var(--accent);text-shadow:0 0 8px rgba(57,255,20,.45)}
+  .nav{display:flex;gap:14px;align-items:center;margin-left:auto}
+  .nav a{color:#e7e7e7;opacity:.85;text-decoration:none}
+  .nav a:hover{opacity:1}
+  .panel{background:var(--panel);border-radius:14px;padding:16px;border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 24px rgba(0,0,0,.35)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .row{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+  .val{font-variant-numeric:tabular-nums;opacity:.85}
+  .btn{appearance:none;border:1px solid rgba(255,255,255,.15);background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));color:#fff;padding:8px 10px;border-radius:10px;cursor:pointer}
+  .btn:hover{border-color:rgba(255,255,255,.28)}
+  canvas{width:min(92vw,900px);height:auto;max-width:900px;background:#000;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.5), 0 0 0 10px #000}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">mindprint.art</div>
+      <nav class="nav">
+        <a href="index.html">Home</a>
+        <a href="mint.html">Mint</a>
+        <a href="about.html">About</a>
+      </nav>
+    </header>
+
+    <section style="display:grid;gap:12px">
+      <canvas id="flow" width="900" height="900" aria-label="Perlin Flow"></canvas>
+      <div class="panel">
+        <div class="grid2">
+          <div>
+            <div class="row"><label for="pCount">Particles</label><output id="pCountVal" class="val">800</output></div>
+            <input id="pCount" type="range" min="100" max="4000" value="800" step="50">
+          </div>
+          <div>
+            <div class="row"><label for="scale">Noise scale</label><output id="scaleVal" class="val">0.0020</output></div>
+            <input id="scale" type="range" min="0.0005" max="0.01" value="0.002" step="0.0001">
+          </div>
+          <div>
+            <div class="row"><label for="strength">Flow strength</label><output id="strengthVal" class="val">0.80</output></div>
+            <input id="strength" type="range" min="0.1" max="2" value="0.8" step="0.05">
+          </div>
+          <div>
+            <div class="row"><label for="fade">Trail fade</label><output id="fadeVal" class="val">0.06</output></div>
+            <input id="fade" type="range" min="0.0" max="0.2" value="0.06" step="0.005">
+          </div>
+          <div>
+            <div class="row"><label for="speed">Anim speed</label><output id="speedVal" class="val">1.00</output></div>
+            <input id="speed" type="range" min="0" max="3" value="1" step="0.05">
+          </div>
+          <div>
+            <div class="row"><label for="hue">Color shift</label><output id="hueVal" class="val">180</output></div>
+            <input id="hue" type="range" min="0" max="360" value="180" step="1">
+          </div>
+          <div>
+            <div class="row"><label for="renderMode">Render mode</label></div>
+            <select id="renderMode" class="btn">
+              <option value="particles" selected>Particles</option>
+              <option value="ribbons">Ribbons</option>
+              <option value="arrows">Field arrows</option>
+              <option value="heightmap">Heightmap</option>
+            </select>
+          </div>
+          <div>
+            <div class="row"><label for="flowType">Flow type</label></div>
+            <select id="flowType" class="btn">
+              <option value="fbm" selected>FBM flow</option>
+              <option value="curl">Curl flow</option>
+              <option value="warp">Domain warp</option>
+            </select>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
+          <button id="play" class="btn">▶ Play</button>
+          <button id="pause" class="btn">⏸ Pause</button>
+          <button id="reset" class="btn">↺ Reset</button>
+          <button id="save" class="btn">⬇ Save PNG</button>
+          <button id="rec10" class="btn">● Rec 10s (WebM)</button>
+          <button id="rec15" class="btn">● Rec 15s (WebM)</button>
+          <button id="camToggle" class="btn">📷 Use Camera Control</button>
+          <button id="micToggle" class="btn">🎤 Use Mic Control</button>
+        </div>
+      </div>
+    </section>
+    <video id="camVideo" playsinline muted autoplay style="display:none"></video>
+  </div>
+  <script src="noise.js" defer></script>
+</body>
+</html>
+
+
