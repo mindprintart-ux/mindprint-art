@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mutant Collector Card</title>
+<style>
+  body {
+    background: #000;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Roboto", sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    color: #e6e6f5;
+  }
+
+  .card {
+    width: 900px;
+    aspect-ratio: 3 / 2;
+    background: radial-gradient(circle at top left, #1b2240 0%, #05060a 55%, #05060a 100%);
+    border-radius: 24px;
+    padding: 20px 26px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.8);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(120deg, rgba(92,255,122,0.15), transparent 40%),
+      linear-gradient(-130deg, rgba(255,43,170,0.2), transparent 50%);
+    mix-blend-mode: screen;
+    opacity: 0.8;
+    pointer-events: none;
+  }
+
+  .card-inner {
+    position: relative;
+    display: flex;
+    gap: 22px;
+    flex: 1;
+  }
+
+  .top-strip {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    opacity: 0.9;
+  }
+
+  .top-strip-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid #5CFF7A;
+    box-shadow: 0 0 10px rgba(92,255,122,0.8);
+  }
+
+  .top-strip-right {
+    font-size: 10px;
+    opacity: 0.7;
+  }
+
+  .portrait-wrapper {
+    flex: 0 0 52%;
+    background: rgba(0,0,0,0.6);
+    border-radius: 18px;
+    padding: 10px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 0 1px rgba(66,228,255,0.25);
+  }
+
+  .portrait-wrapper::after {
+    content: "SUBJECT: RADI[FROG]  // STATUS: MUTATED";
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 6px;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: linear-gradient(90deg, rgba(5,6,10,0.8), transparent);
+    padding: 4px 8px;
+    color: #c0ffe0;
+  }
+
+  .portrait {
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+    filter: saturate(1.2) contrast(1.05);
+  }
+
+  .info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+  }
+
+  .title-block {
+    margin-top: 8px;
+  }
+
+  .title-main {
+    font-size: 24px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .title-sub {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: #42E4FF;
+    margin-top: 4px;
+  }
+
+  .data-grid {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    font-size: 12px;
+  }
+
+  .data-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: #8f96b8;
+    margin-bottom: 2px;
+  }
+
+  .data-value {
+    font-family: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 12px;
+  }
+
+  .bottom-strip {
+    position: relative;
+    margin-top: 14px;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: #7f8296;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: 6px;
+  }
+
+  .glitch-bars {
+    position: absolute;
+    right: 0;
+    top: 0;
+    display: flex;
+    gap: 4px;
+  }
+
+  .glitch-bar {
+    width: 10px;
+    height: 3px;
+    border-radius: 999px;
+    background: #FF2BAA;
+  }
+
+  .glitch-bar:nth-child(2) { background: #5CFF7A; }
+  .glitch-bar:nth-child(3) { background: #42E4FF; }
+
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="top-strip">
+      <div class="top-strip-left">
+        <div class="logo-dot"></div>
+        <span>MINDPRINT.LAB // MUTANT ACCESS</span>
+      </div>
+      <div class="top-strip-right">
+        PROTOCOL: RADIACCESS_GEN_01
+      </div>
+    </div>
+
+    <div class="card-inner">
+      <div class="portrait-wrapper">
+        <img src="dude.png" alt="Mutant Portrait" class="portrait">
+      </div>
+
+      <div class="info">
+        <div class="title-block">
+          <div class="title-main">RADIACCESS</div>
+          <div class="title-sub">GENESIS COLLECTOR CARD</div>
+        </div>
+
+        <div class="data-grid">
+          <div>
+            <div class="data-label">Token ID</div>
+            <div class="data-value">#00017</div>
+          </div>
+          <div>
+            <div class="data-label">Chain</div>
+            <div class="data-value">BASE // MAIN</div>
+          </div>
+          <div>
+            <div class="data-label">Key Code</div>
+            <div class="data-value">RF-7X9-Δ-2049</div>
+          </div>
+          <div>
+            <div class="data-label">Grants</div>
+            <div class="data-value">1× FUTURE IMAGE DOWNLOAD (WALLET-LOCKED)</div>
+          </div>
+        </div>
+
+        <div class="bottom-strip">
+          WARNING: ONCHAIN VERIFICATION REQUIRED. POSSESSION OF IMAGE ALONE DOES NOT GRANT ACCESS.
+          <div class="glitch-bars">
+            <div class="glitch-bar"></div>
+            <div class="glitch-bar"></div>
+            <div class="glitch-bar"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
